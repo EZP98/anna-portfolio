@@ -1,32 +1,31 @@
 import { useRef, useEffect, useState } from 'react'
 import { motion, useScroll, useSpring, useMotionValue } from 'framer-motion'
 
-// Portfolio work items - centered in content area with proper spacing
+// Portfolio work items - dynamic scattered layout with overlaps
 const portfolioItems = [
-  // Row 1 - start at y:60 to not cut off
-  { id: 1, x: 60, y: 60, w: 300, h: 220, rotate: -2, z: 10, image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=450&fit=crop' },
-  { id: 2, x: 400, y: 40, w: 260, h: 340, rotate: 2, z: 12, image: 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=500&h=700&fit=crop' },
-  { id: 3, x: 700, y: 80, w: 280, h: 220, rotate: -1, z: 11, image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&h=450&fit=crop' },
+  // Cluster 1 - top area with overlapping
+  { id: 1, x: 20, y: 30, w: 280, h: 200, rotate: -4, z: 10, image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=450&fit=crop' },
+  { id: 2, x: 260, y: 80, w: 300, h: 380, rotate: 3, z: 15, image: 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=500&h=700&fit=crop' },
+  { id: 3, x: 520, y: 20, w: 320, h: 260, rotate: -2, z: 12, image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&h=450&fit=crop' },
+  { id: 4, x: 780, y: 120, w: 240, h: 280, rotate: 5, z: 14, image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=500&h=700&fit=crop' },
 
-  // Row 2
-  { id: 4, x: 80, y: 320, w: 240, h: 300, rotate: 1, z: 13, image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=450&h=600&fit=crop' },
-  { id: 5, x: 360, y: 420, w: 320, h: 240, rotate: -2, z: 15, image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=700&h=500&fit=crop' },
-  { id: 6, x: 720, y: 340, w: 260, h: 340, rotate: 2, z: 14, image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=500&h=700&fit=crop' },
+  // Cluster 2 - overlapping middle section
+  { id: 5, x: 40, y: 280, w: 220, h: 320, rotate: 6, z: 16, image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=450&h=600&fit=crop' },
+  { id: 6, x: 200, y: 480, w: 340, h: 260, rotate: -5, z: 18, image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=700&h=500&fit=crop' },
+  { id: 7, x: 500, y: 340, w: 280, h: 360, rotate: 2, z: 17, image: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&h=450&fit=crop' },
+  { id: 8, x: 740, y: 440, w: 260, h: 320, rotate: -4, z: 19, image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=450&h=600&fit=crop' },
 
-  // Row 3
-  { id: 7, x: 100, y: 660, w: 280, h: 220, rotate: -1, z: 16, image: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&h=450&fit=crop' },
-  { id: 8, x: 420, y: 700, w: 240, h: 320, rotate: 3, z: 18, image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=450&h=600&fit=crop' },
-  { id: 9, x: 700, y: 720, w: 280, h: 220, rotate: -2, z: 17, image: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=600&h=450&fit=crop' },
+  // Cluster 3 - dynamic lower section
+  { id: 9, x: 60, y: 640, w: 300, h: 240, rotate: -3, z: 20, image: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=600&h=450&fit=crop' },
+  { id: 10, x: 320, y: 760, w: 260, h: 340, rotate: 7, z: 22, image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&h=650&fit=crop' },
+  { id: 11, x: 560, y: 720, w: 280, h: 220, rotate: -6, z: 21, image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=650&h=500&fit=crop' },
+  { id: 12, x: 800, y: 800, w: 220, h: 300, rotate: 4, z: 23, image: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=450&h=600&fit=crop' },
 
-  // Row 4
-  { id: 10, x: 80, y: 940, w: 260, h: 340, rotate: 2, z: 19, image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&h=650&fit=crop' },
-  { id: 11, x: 380, y: 1020, w: 300, h: 240, rotate: -1, z: 20, image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=650&h=500&fit=crop' },
-  { id: 12, x: 720, y: 980, w: 240, h: 300, rotate: 1, z: 21, image: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=450&h=600&fit=crop' },
-
-  // Row 5
-  { id: 13, x: 100, y: 1320, w: 280, h: 220, rotate: -2, z: 22, image: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&h=450&fit=crop' },
-  { id: 14, x: 420, y: 1300, w: 260, h: 340, rotate: 2, z: 24, image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&h=650&fit=crop' },
-  { id: 15, x: 720, y: 1340, w: 260, h: 260, rotate: -1, z: 23, image: 'https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?w=500&h=550&fit=crop' },
+  // Cluster 4 - bottom scattered
+  { id: 13, x: 100, y: 940, w: 260, h: 200, rotate: 5, z: 24, image: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&h=450&fit=crop' },
+  { id: 14, x: 340, y: 1100, w: 300, h: 380, rotate: -4, z: 26, image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&h=650&fit=crop' },
+  { id: 15, x: 620, y: 1020, w: 240, h: 280, rotate: 3, z: 25, image: 'https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?w=500&h=550&fit=crop' },
+  { id: 16, x: 820, y: 1140, w: 200, h: 260, rotate: -5, z: 27, image: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=450&h=600&fit=crop' },
 ]
 
 // Draggable Portfolio Card
@@ -94,7 +93,6 @@ function Sidebar() {
         alignItems: 'center',
         justifyContent: 'center',
         padding: '0 40px',
-        boxShadow: '4px 0 20px rgba(0,0,0,0.08)',
       }}
     >
       {/* Name / Logo */}
