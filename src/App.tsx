@@ -1,139 +1,33 @@
 import { useRef, useEffect, useState } from 'react'
 import { motion, useScroll, useSpring, useMotionValue } from 'framer-motion'
 
-// Portfolio work items - graphic design pieces
+// Portfolio work items - scattered layout like annamills.xyz
 const portfolioItems = [
-  // Row 1
-  { id: 1, x: 420, y: 50, w: 450, h: 380, rotate: 0, z: 10, bg: '#ffffff', content: 'typography' },
-  { id: 2, x: 920, y: 30, w: 280, h: 250, rotate: 0, z: 11, bg: '#1a1a1a', content: 'poster-green' },
-  { id: 3, x: 920, y: 320, w: 300, h: 280, rotate: 0, z: 12, bg: '#e8e8e8', content: 'script' },
-  // Row 2
-  { id: 4, x: 450, y: 480, w: 420, h: 350, rotate: 0, z: 13, bg: '#4a5d3e', content: 'organic' },
-  { id: 5, x: 900, y: 550, w: 280, h: 320, rotate: 3, z: 14, bg: '#fce4ec', content: 'blocky' },
-  // Row 3
-  { id: 6, x: 420, y: 880, w: 380, h: 320, rotate: -2, z: 15, bg: '#fff8e1', content: 'collage' },
-  { id: 7, x: 830, y: 900, w: 350, h: 350, rotate: 0, z: 16, bg: '#1a1a1a', content: 'neon' },
-  // Row 4
-  { id: 8, x: 450, y: 1250, w: 400, h: 300, rotate: 2, z: 17, bg: '#e3f2fd', content: 'minimal' },
-  { id: 9, x: 880, y: 1280, w: 320, h: 280, rotate: -3, z: 18, bg: '#f3e5f5', content: 'abstract' },
-  // Row 5
-  { id: 10, x: 420, y: 1600, w: 450, h: 380, rotate: 0, z: 19, bg: '#ffffff', content: 'editorial' },
-  { id: 11, x: 900, y: 1650, w: 300, h: 300, rotate: 4, z: 20, bg: '#ffebee', content: 'branding' },
-]
+  // Hero cluster - top area (x starts at 40 for padding from sidebar edge)
+  { id: 1, x: 40, y: 50, w: 320, h: 240, rotate: -2, z: 10, image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=450&fit=crop' },
+  { id: 2, x: 380, y: 80, w: 280, h: 380, rotate: 3, z: 12, image: 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=500&h=700&fit=crop' },
+  { id: 3, x: 680, y: 40, w: 350, h: 260, rotate: -1, z: 11, image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&h=450&fit=crop' },
 
-// Custom Typography Art Component
-function TypographyArt({ type }: { type: string }) {
-  switch (type) {
-    case 'typography':
-      return (
-        <div className="w-full h-full flex items-center justify-center p-8">
-          <svg viewBox="0 0 400 300" className="w-full h-full">
-            {/* Hope World style spiraling typography */}
-            <text x="50" y="80" fontSize="48" fontFamily="serif" fontStyle="italic" fill="#1a1a1a">
-              <tspan>H</tspan>
-              <tspan dx="-5" dy="10">o</tspan>
-              <tspan dx="-8" dy="-5">p</tspan>
-              <tspan dx="-5" dy="8">e</tspan>
-            </text>
-            <path d="M180,60 Q220,30 260,60 T340,60" stroke="#1a1a1a" strokeWidth="3" fill="none" />
-            <circle cx="200" cy="120" r="30" stroke="#1a1a1a" strokeWidth="2" fill="none" />
-            <path d="M200,90 A30,30 0 1,1 200,150 A30,30 0 1,1 200,90" stroke="#1a1a1a" strokeWidth="2" fill="none" />
-            <text x="100" y="200" fontSize="56" fontFamily="serif" fontStyle="italic" fill="#1a1a1a">World</text>
-            <circle cx="320" cy="180" r="25" stroke="#1a1a1a" strokeWidth="2" fill="none" />
-            <path d="M320,155 A25,25 0 1,1 320,205" stroke="#1a1a1a" strokeWidth="2" fill="none" />
-          </svg>
-        </div>
-      )
-    case 'poster-green':
-      return (
-        <div className="w-full h-full relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-green-600 to-green-900" />
-          <div className="absolute inset-0" style={{
-            backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,255,0,0.1) 10px, rgba(0,255,0,0.1) 20px)',
-          }} />
-          <div className="absolute bottom-4 right-4 text-white text-xs font-mono">CRACK</div>
-        </div>
-      )
-    case 'script':
-      return (
-        <div className="w-full h-full flex items-center justify-center">
-          <svg viewBox="0 0 200 150" className="w-3/4 h-3/4">
-            <text x="20" y="90" fontSize="36" fontFamily="cursive" fill="#1a1a1a" style={{ fontStyle: 'italic' }}>
-              Style
-            </text>
-            {/* Dotted decoration */}
-            {[...Array(20)].map((_, i) => (
-              <circle key={i} cx={30 + (i % 10) * 15} cy={110 + Math.floor(i / 10) * 15} r="2" fill="#1a1a1a" />
-            ))}
-          </svg>
-        </div>
-      )
-    case 'organic':
-      return (
-        <div className="w-full h-full flex items-center justify-center p-8">
-          <svg viewBox="0 0 300 200" className="w-full h-full">
-            <path d="M50,100 Q80,50 120,80 T180,60 T240,100 T280,80" stroke="#d4c9a8" strokeWidth="4" fill="none" />
-            <path d="M40,140 Q100,100 150,130 T250,120" stroke="#d4c9a8" strokeWidth="3" fill="none" />
-            <text x="60" y="180" fontSize="24" fontFamily="serif" fill="#d4c9a8" opacity="0.8">organic</text>
-          </svg>
-        </div>
-      )
-    case 'blocky':
-      return (
-        <div className="w-full h-full flex items-center justify-center p-6">
-          <div className="text-5xl font-black text-red-400" style={{ fontFamily: 'Impact, sans-serif', letterSpacing: '-0.05em' }}>
-            JOY
-          </div>
-        </div>
-      )
-    case 'collage':
-      return (
-        <div className="w-full h-full relative overflow-hidden">
-          <div className="absolute top-4 left-4 w-20 h-20 bg-orange-200 rounded-full" />
-          <div className="absolute bottom-8 right-8 w-32 h-16 bg-blue-200 rotate-12" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl font-serif">collage</div>
-        </div>
-      )
-    case 'neon':
-      return (
-        <div className="w-full h-full flex items-center justify-center">
-          <div className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500">
-            NEON
-          </div>
-        </div>
-      )
-    case 'minimal':
-      return (
-        <div className="w-full h-full flex items-center justify-center">
-          <div className="w-24 h-24 border-2 border-black rounded-full" />
-        </div>
-      )
-    case 'abstract':
-      return (
-        <div className="w-full h-full relative overflow-hidden p-6">
-          <div className="absolute top-6 left-6 w-16 h-16 border-4 border-purple-400 rounded-full" />
-          <div className="absolute bottom-6 right-6 w-20 h-20 bg-purple-200" />
-          <div className="absolute top-1/2 left-1/2 w-12 h-24 bg-purple-300 -rotate-45" />
-        </div>
-      )
-    case 'editorial':
-      return (
-        <div className="w-full h-full flex flex-col items-center justify-center gap-4 p-8">
-          <div className="text-6xl font-serif font-light tracking-widest">A</div>
-          <div className="w-32 h-0.5 bg-black" />
-          <div className="text-xs tracking-[0.3em] uppercase">Editorial</div>
-        </div>
-      )
-    case 'branding':
-      return (
-        <div className="w-full h-full flex items-center justify-center">
-          <div className="text-3xl font-black tracking-tighter">BRAND</div>
-        </div>
-      )
-    default:
-      return <div className="w-full h-full bg-gray-200" />
-  }
-}
+  // Second row - overlapping
+  { id: 4, x: 40, y: 320, w: 260, h: 340, rotate: 2, z: 13, image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=450&h=600&fit=crop' },
+  { id: 5, x: 320, y: 480, w: 380, h: 280, rotate: -3, z: 15, image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=700&h=500&fit=crop' },
+  { id: 6, x: 720, y: 350, w: 300, h: 400, rotate: 1, z: 14, image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=500&h=700&fit=crop' },
+
+  // Third row
+  { id: 7, x: 60, y: 700, w: 340, h: 250, rotate: -2, z: 16, image: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&h=450&fit=crop' },
+  { id: 8, x: 420, y: 780, w: 280, h: 360, rotate: 4, z: 18, image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=450&h=600&fit=crop' },
+  { id: 9, x: 720, y: 760, w: 320, h: 240, rotate: -1, z: 17, image: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=600&h=450&fit=crop' },
+
+  // Fourth row
+  { id: 10, x: 40, y: 1000, w: 300, h: 380, rotate: 3, z: 19, image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&h=650&fit=crop' },
+  { id: 11, x: 360, y: 1100, w: 360, h: 270, rotate: -2, z: 20, image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=650&h=500&fit=crop' },
+  { id: 12, x: 740, y: 1050, w: 280, h: 350, rotate: 2, z: 21, image: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=450&h=600&fit=crop' },
+
+  // Fifth row
+  { id: 13, x: 80, y: 1400, w: 320, h: 240, rotate: -3, z: 22, image: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&h=450&fit=crop' },
+  { id: 14, x: 420, y: 1420, w: 300, h: 380, rotate: 1, z: 24, image: 'https://images.unsplash.com/photo-1485968579169-19d4acb56a00?w=500&h=650&fit=crop' },
+  { id: 15, x: 740, y: 1380, w: 280, h: 300, rotate: -2, z: 23, image: 'https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?w=500&h=550&fit=crop' },
+]
 
 // Draggable Portfolio Card
 function DraggableCard({ item }: { item: typeof portfolioItems[0] }) {
@@ -159,7 +53,6 @@ function DraggableCard({ item }: { item: typeof portfolioItems[0] }) {
         rotate: item.rotate,
         zIndex: isDragging ? 1000 : item.z,
         cursor: 'grab',
-        backgroundColor: item.bg,
       }}
       whileDrag={{ cursor: 'grabbing', scale: 1.02, boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' }}
       whileHover={{ scale: 1.01 }}
@@ -167,9 +60,14 @@ function DraggableCard({ item }: { item: typeof portfolioItems[0] }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.6 }}
-      className="select-none rounded-xl overflow-hidden shadow-lg"
+      className="select-none rounded-[11px] overflow-hidden shadow-lg"
     >
-      <TypographyArt type={item.content} />
+      <img
+        src={item.image}
+        alt={`Portfolio item ${item.id}`}
+        className="w-full h-full object-cover"
+        draggable={false}
+      />
     </motion.div>
   )
 }
@@ -310,7 +208,7 @@ function App() {
       {/* Main Content Area */}
       <main
         ref={containerRef}
-        className="ml-[320px] relative"
+        className="ml-[320px] relative pl-10 pt-6"
         style={{ height: contentHeight }}
       >
         {/* Progress Bar */}
