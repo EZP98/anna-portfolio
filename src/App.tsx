@@ -1,84 +1,142 @@
 import { useRef, useEffect, useState } from 'react'
 import { motion, useScroll, useSpring, useMotionValue } from 'framer-motion'
 
-// Portfolio items - organic scattered layout like annamills.xyz
+// Portfolio work items - graphic design pieces
 const portfolioItems = [
-  // Top cluster - overlapping chaos
-  { id: 1, x: 50, y: 30, w: 160, h: 160, rotate: 0, z: 5 },
-  { id: 2, x: 140, y: 50, w: 140, h: 180, rotate: 8, z: 6 },
-  { id: 3, x: 250, y: 20, w: 180, h: 140, rotate: -5, z: 7 },
-  { id: 4, x: 380, y: 60, w: 150, h: 200, rotate: 12, z: 8 },
-  { id: 5, x: 80, y: 150, w: 170, h: 210, rotate: -10, z: 9 },
-  { id: 6, x: 220, y: 130, w: 150, h: 150, rotate: 5, z: 10 },
-  { id: 7, x: 340, y: 180, w: 180, h: 160, rotate: -8, z: 11 },
-  { id: 8, x: 30, y: 300, w: 200, h: 160, rotate: 6, z: 12 },
-  { id: 9, x: 180, y: 280, w: 160, h: 200, rotate: -12, z: 13 },
-  { id: 10, x: 320, y: 320, w: 190, h: 170, rotate: 4, z: 14 },
-
-  // Middle section - larger overlapping
-  { id: 11, x: 20, y: 480, w: 280, h: 350, rotate: -5, z: 20 },
-  { id: 12, x: 260, y: 520, w: 260, h: 320, rotate: 7, z: 21 },
-
-  // Scattered section
-  { id: 13, x: 60, y: 870, w: 200, h: 250, rotate: 10, z: 25 },
-  { id: 14, x: 230, y: 850, w: 170, h: 220, rotate: -6, z: 26 },
-  { id: 15, x: 380, y: 900, w: 150, h: 190, rotate: 8, z: 27 },
-  { id: 16, x: 120, y: 1080, w: 220, h: 180, rotate: -8, z: 28 },
-  { id: 17, x: 320, y: 1100, w: 190, h: 240, rotate: 5, z: 29 },
-
-  // Grid-ish but with rotation
-  { id: 18, x: 30, y: 1320, w: 250, h: 250, rotate: -3, z: 30 },
-  { id: 19, x: 290, y: 1340, w: 240, h: 260, rotate: 4, z: 31 },
-  { id: 20, x: 50, y: 1600, w: 260, h: 280, rotate: 2, z: 32 },
-  { id: 21, x: 300, y: 1620, w: 230, h: 250, rotate: -5, z: 33 },
-
-  // Polaroid stack
-  { id: 22, x: 150, y: 1920, w: 130, h: 170, rotate: -15, z: 40 },
-  { id: 23, x: 180, y: 1940, w: 130, h: 170, rotate: 8, z: 41 },
-  { id: 24, x: 210, y: 1960, w: 130, h: 170, rotate: -5, z: 42 },
-  { id: 25, x: 240, y: 1980, w: 130, h: 170, rotate: 12, z: 43 },
-
-  // Bottom large items
-  { id: 26, x: 40, y: 2200, w: 280, h: 320, rotate: -4, z: 50 },
-  { id: 27, x: 300, y: 2240, w: 250, h: 300, rotate: 6, z: 51 },
-  { id: 28, x: 80, y: 2560, w: 240, h: 200, rotate: 5, z: 52 },
-  { id: 29, x: 310, y: 2540, w: 220, h: 280, rotate: -7, z: 53 },
+  // Row 1
+  { id: 1, x: 420, y: 50, w: 450, h: 380, rotate: 0, z: 10, bg: '#ffffff', content: 'typography' },
+  { id: 2, x: 920, y: 30, w: 280, h: 250, rotate: 0, z: 11, bg: '#1a1a1a', content: 'poster-green' },
+  { id: 3, x: 920, y: 320, w: 300, h: 280, rotate: 0, z: 12, bg: '#e8e8e8', content: 'script' },
+  // Row 2
+  { id: 4, x: 450, y: 480, w: 420, h: 350, rotate: 0, z: 13, bg: '#4a5d3e', content: 'organic' },
+  { id: 5, x: 900, y: 550, w: 280, h: 320, rotate: 3, z: 14, bg: '#fce4ec', content: 'blocky' },
+  // Row 3
+  { id: 6, x: 420, y: 880, w: 380, h: 320, rotate: -2, z: 15, bg: '#fff8e1', content: 'collage' },
+  { id: 7, x: 830, y: 900, w: 350, h: 350, rotate: 0, z: 16, bg: '#1a1a1a', content: 'neon' },
+  // Row 4
+  { id: 8, x: 450, y: 1250, w: 400, h: 300, rotate: 2, z: 17, bg: '#e3f2fd', content: 'minimal' },
+  { id: 9, x: 880, y: 1280, w: 320, h: 280, rotate: -3, z: 18, bg: '#f3e5f5', content: 'abstract' },
+  // Row 5
+  { id: 10, x: 420, y: 1600, w: 450, h: 380, rotate: 0, z: 19, bg: '#ffffff', content: 'editorial' },
+  { id: 11, x: 900, y: 1650, w: 300, h: 300, rotate: 4, z: 20, bg: '#ffebee', content: 'branding' },
 ]
 
-// All portfolio images - creative/artistic photos
-const portfolioImages = [
-  'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=700&fit=crop',
-  'https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=600&h=600&fit=crop',
-  'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&h=700&fit=crop',
-  'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=600&fit=crop',
-  'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=600&h=700&fit=crop',
-  'https://images.unsplash.com/photo-1549490349-8643362247b5?w=600&h=600&fit=crop',
-  'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&h=700&fit=crop',
-  'https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=600&h=600&fit=crop',
-  'https://images.unsplash.com/photo-1482160549825-59d1b23cb208?w=600&h=700&fit=crop',
-  'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&h=600&fit=crop',
-  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&h=700&fit=crop',
-  'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&h=600&fit=crop',
-  'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&h=700&fit=crop',
-  'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&h=600&fit=crop',
-  'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=600&h=700&fit=crop',
-]
-
-// Portfolio Card Content
-function CardContent({ index }: { index: number }) {
-  const imageUrl = portfolioImages[index % portfolioImages.length]
-  return (
-    <img
-      src={imageUrl}
-      alt={`Portfolio ${index + 1}`}
-      className="w-full h-full object-cover"
-      loading="lazy"
-    />
-  )
+// Custom Typography Art Component
+function TypographyArt({ type }: { type: string }) {
+  switch (type) {
+    case 'typography':
+      return (
+        <div className="w-full h-full flex items-center justify-center p-8">
+          <svg viewBox="0 0 400 300" className="w-full h-full">
+            {/* Hope World style spiraling typography */}
+            <text x="50" y="80" fontSize="48" fontFamily="serif" fontStyle="italic" fill="#1a1a1a">
+              <tspan>H</tspan>
+              <tspan dx="-5" dy="10">o</tspan>
+              <tspan dx="-8" dy="-5">p</tspan>
+              <tspan dx="-5" dy="8">e</tspan>
+            </text>
+            <path d="M180,60 Q220,30 260,60 T340,60" stroke="#1a1a1a" strokeWidth="3" fill="none" />
+            <circle cx="200" cy="120" r="30" stroke="#1a1a1a" strokeWidth="2" fill="none" />
+            <path d="M200,90 A30,30 0 1,1 200,150 A30,30 0 1,1 200,90" stroke="#1a1a1a" strokeWidth="2" fill="none" />
+            <text x="100" y="200" fontSize="56" fontFamily="serif" fontStyle="italic" fill="#1a1a1a">World</text>
+            <circle cx="320" cy="180" r="25" stroke="#1a1a1a" strokeWidth="2" fill="none" />
+            <path d="M320,155 A25,25 0 1,1 320,205" stroke="#1a1a1a" strokeWidth="2" fill="none" />
+          </svg>
+        </div>
+      )
+    case 'poster-green':
+      return (
+        <div className="w-full h-full relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-green-600 to-green-900" />
+          <div className="absolute inset-0" style={{
+            backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,255,0,0.1) 10px, rgba(0,255,0,0.1) 20px)',
+          }} />
+          <div className="absolute bottom-4 right-4 text-white text-xs font-mono">CRACK</div>
+        </div>
+      )
+    case 'script':
+      return (
+        <div className="w-full h-full flex items-center justify-center">
+          <svg viewBox="0 0 200 150" className="w-3/4 h-3/4">
+            <text x="20" y="90" fontSize="36" fontFamily="cursive" fill="#1a1a1a" style={{ fontStyle: 'italic' }}>
+              Style
+            </text>
+            {/* Dotted decoration */}
+            {[...Array(20)].map((_, i) => (
+              <circle key={i} cx={30 + (i % 10) * 15} cy={110 + Math.floor(i / 10) * 15} r="2" fill="#1a1a1a" />
+            ))}
+          </svg>
+        </div>
+      )
+    case 'organic':
+      return (
+        <div className="w-full h-full flex items-center justify-center p-8">
+          <svg viewBox="0 0 300 200" className="w-full h-full">
+            <path d="M50,100 Q80,50 120,80 T180,60 T240,100 T280,80" stroke="#d4c9a8" strokeWidth="4" fill="none" />
+            <path d="M40,140 Q100,100 150,130 T250,120" stroke="#d4c9a8" strokeWidth="3" fill="none" />
+            <text x="60" y="180" fontSize="24" fontFamily="serif" fill="#d4c9a8" opacity="0.8">organic</text>
+          </svg>
+        </div>
+      )
+    case 'blocky':
+      return (
+        <div className="w-full h-full flex items-center justify-center p-6">
+          <div className="text-5xl font-black text-red-400" style={{ fontFamily: 'Impact, sans-serif', letterSpacing: '-0.05em' }}>
+            JOY
+          </div>
+        </div>
+      )
+    case 'collage':
+      return (
+        <div className="w-full h-full relative overflow-hidden">
+          <div className="absolute top-4 left-4 w-20 h-20 bg-orange-200 rounded-full" />
+          <div className="absolute bottom-8 right-8 w-32 h-16 bg-blue-200 rotate-12" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl font-serif">collage</div>
+        </div>
+      )
+    case 'neon':
+      return (
+        <div className="w-full h-full flex items-center justify-center">
+          <div className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500">
+            NEON
+          </div>
+        </div>
+      )
+    case 'minimal':
+      return (
+        <div className="w-full h-full flex items-center justify-center">
+          <div className="w-24 h-24 border-2 border-black rounded-full" />
+        </div>
+      )
+    case 'abstract':
+      return (
+        <div className="w-full h-full relative overflow-hidden p-6">
+          <div className="absolute top-6 left-6 w-16 h-16 border-4 border-purple-400 rounded-full" />
+          <div className="absolute bottom-6 right-6 w-20 h-20 bg-purple-200" />
+          <div className="absolute top-1/2 left-1/2 w-12 h-24 bg-purple-300 -rotate-45" />
+        </div>
+      )
+    case 'editorial':
+      return (
+        <div className="w-full h-full flex flex-col items-center justify-center gap-4 p-8">
+          <div className="text-6xl font-serif font-light tracking-widest">A</div>
+          <div className="w-32 h-0.5 bg-black" />
+          <div className="text-xs tracking-[0.3em] uppercase">Editorial</div>
+        </div>
+      )
+    case 'branding':
+      return (
+        <div className="w-full h-full flex items-center justify-center">
+          <div className="text-3xl font-black tracking-tighter">BRAND</div>
+        </div>
+      )
+    default:
+      return <div className="w-full h-full bg-gray-200" />
+  }
 }
 
 // Draggable Portfolio Card
-function DraggableCard({ item, index }: { item: typeof portfolioItems[0], index: number }) {
+function DraggableCard({ item }: { item: typeof portfolioItems[0] }) {
   const x = useMotionValue(0)
   const y = useMotionValue(0)
   const [isDragging, setIsDragging] = useState(false)
@@ -99,104 +157,138 @@ function DraggableCard({ item, index }: { item: typeof portfolioItems[0], index:
         width: item.w,
         height: item.h,
         rotate: item.rotate,
-        zIndex: isDragging ? 100 : item.z,
+        zIndex: isDragging ? 1000 : item.z,
         cursor: 'grab',
-        borderRadius: 12,
-        boxShadow: '0 4px 20px rgba(0,0,0,0.12)',
+        backgroundColor: item.bg,
       }}
-      whileDrag={{ cursor: 'grabbing', scale: 1.03 }}
-      whileHover={{ scale: 1.02 }}
-      className="select-none overflow-hidden bg-neutral-100"
+      whileDrag={{ cursor: 'grabbing', scale: 1.02, boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' }}
+      whileHover={{ scale: 1.01 }}
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ duration: 0.6 }}
+      className="select-none rounded-xl overflow-hidden shadow-lg"
     >
-      <CardContent index={index} />
+      <TypographyArt type={item.content} />
     </motion.div>
   )
 }
 
-// Sidebar - Clean and Simple
+// Sidebar Navigation
 function Sidebar() {
   const [activeSection, setActiveSection] = useState('work')
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-[240px] bg-white z-[100] flex flex-col items-center py-10 px-6 border-r border-neutral-100 shadow-sm">
-      {/* Name */}
-      <h1 className="text-[28px] font-black leading-[0.95] tracking-tight text-center mb-2">
-        ANNA<br />MILLS
-      </h1>
-
-      {/* Role */}
-      <p className="text-[10px] text-neutral-400 tracking-[0.15em] uppercase mb-6">
-        Creative Director
-      </p>
-
-      {/* Profile Image */}
-      <div className="w-24 h-24 mb-6 overflow-hidden rounded-full">
-        <img
-          src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&h=300&fit=crop"
-          alt="Portrait"
-          className="w-full h-full object-cover"
-        />
+    <motion.aside
+      initial={{ x: -100, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className="fixed left-0 top-0 h-screen w-[320px] bg-white z-[9999] flex flex-col items-center py-12 px-8 shadow-[4px_0_20px_rgba(0,0,0,0.05)]"
+    >
+      {/* Name / Logo */}
+      <div className="mb-6 text-center">
+        <h1 className="text-[42px] font-black leading-none tracking-tight">
+          ANNA<br />MILLS
+        </h1>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex flex-col items-center gap-2 mb-6">
+      {/* Glitch/Pixel Text */}
+      <div className="mb-8 text-center">
+        <div className="text-[11px] font-mono tracking-widest text-black/70" style={{
+          fontFamily: 'monospace',
+          letterSpacing: '0.2em',
+        }}>
+          ▓▓ ▓▓▓▓ ▓▓▓ ▓▓▓ ▓▓<br />
+          ▓ ▓▓▓▓▓▓▓<br />
+          ▓▓ ▓▓▓ ▓▓▓ ▓▓▓<br />
+          ▓▓▓ ▓▓▓▓▓▓ ▓
+        </div>
+      </div>
+
+      {/* Vintage Photo */}
+      <motion.div
+        className="w-36 h-44 mb-8 overflow-hidden"
+        whileHover={{ scale: 1.05 }}
+      >
+        <img
+          src="https://images.unsplash.com/photo-1518756131217-31eb79b20e8f?w=300&h=400&fit=crop&q=80"
+          alt="Vintage portrait"
+          className="w-full h-full object-cover grayscale"
+          style={{ filter: 'grayscale(100%) contrast(1.1)' }}
+        />
+      </motion.div>
+
+      {/* Navigation - Horizontal */}
+      <nav className="flex items-center gap-6 mb-6">
         {['ABOUT', 'WORK', 'CONTACT'].map((item) => (
-          <a
+          <motion.a
             key={item}
             href={`#${item.toLowerCase()}`}
             onClick={() => setActiveSection(item.toLowerCase())}
-            className={`text-[10px] font-medium tracking-[0.12em] transition-colors ${
+            className={`text-[11px] font-medium tracking-wider transition-colors ${
               activeSection === item.toLowerCase()
                 ? 'text-black'
-                : 'text-neutral-400 hover:text-black'
+                : 'text-black/50 hover:text-black'
             }`}
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.95 }}
           >
             {item}
-          </a>
+          </motion.a>
         ))}
       </nav>
 
-      {/* Description */}
-      <p className="text-[10px] text-neutral-400 text-center leading-relaxed mb-6 px-2">
-        Welcome to my portfolio. Scroll to explore my work.
+      {/* Welcome Text */}
+      <p className="text-[11px] text-black/70 text-center leading-relaxed max-w-[200px] mb-8">
+        Welcome to my website! Do stick around. Scrolling is encouraged here, it makes things happen.
       </p>
 
-      {/* Spacer */}
-      <div className="flex-1" />
-
-      {/* Social */}
-      <div className="flex items-center gap-4">
-        {['IG', 'BE', 'LI'].map((s) => (
-          <a key={s} href="#" className="text-[9px] text-neutral-300 hover:text-black transition-colors">
-            {s}
-          </a>
-        ))}
-      </div>
-    </aside>
+      {/* Play Link */}
+      <motion.a
+        href="#play"
+        className="text-[11px] font-medium tracking-wider text-black hover:text-black/60 transition-colors"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        PLAY!
+      </motion.a>
+    </motion.aside>
   )
 }
 
 // Back to Top Button
 function BackToTop() {
-  const [show, setShow] = useState(false)
+  const [showButton, setShowButton] = useState(false)
 
   useEffect(() => {
-    const onScroll = () => setShow(window.scrollY > 400)
-    window.addEventListener('scroll', onScroll)
-    return () => window.removeEventListener('scroll', onScroll)
+    const handleScroll = () => {
+      setShowButton(window.scrollY > 500)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  if (!show) return null
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   return (
-    <button
-      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      className="fixed bottom-6 right-6 w-10 h-10 bg-black text-white rounded-full flex items-center justify-center z-50 hover:bg-neutral-800 transition-colors"
+    <motion.button
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{
+        opacity: showButton ? 1 : 0,
+        scale: showButton ? 1 : 0.8,
+        pointerEvents: showButton ? 'auto' : 'none'
+      }}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.9 }}
+      onClick={scrollToTop}
+      className="fixed bottom-8 right-8 w-10 h-10 bg-black/5 hover:bg-black/10 rounded-full flex items-center justify-center z-50 transition-colors"
     >
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <path d="M18 15l-6-6-6 6" />
       </svg>
-    </button>
+    </motion.button>
   )
 }
 
@@ -206,25 +298,36 @@ function App() {
   const { scrollYProgress } = useScroll()
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 })
 
+  // Calculate content height based on items
+  const maxY = Math.max(...portfolioItems.map(item => item.y + item.h))
+  const contentHeight = maxY + 300
+
   return (
     <div className="min-h-screen bg-white">
+      {/* Sidebar */}
       <Sidebar />
 
-      <main ref={containerRef} className="ml-[240px]">
+      {/* Main Content Area */}
+      <main
+        ref={containerRef}
+        className="ml-[320px] relative"
+        style={{ height: contentHeight }}
+      >
         {/* Progress Bar */}
         <motion.div
-          className="fixed top-0 left-[240px] right-0 h-[2px] bg-black z-30 origin-left"
+          className="fixed top-0 left-[320px] right-0 h-0.5 bg-black/20 z-40 origin-left"
           style={{ scaleX: smoothProgress }}
         />
 
-        {/* Portfolio Items - wide container for scattered layout */}
-        <div className="relative" style={{ width: 580, height: 3000, padding: 20 }}>
-          {portfolioItems.map((item, index) => (
-            <DraggableCard key={item.id} item={item} index={index} />
+        {/* Portfolio Items */}
+        <div className="relative" style={{ width: '100%', height: contentHeight }}>
+          {portfolioItems.map((item) => (
+            <DraggableCard key={item.id} item={item} />
           ))}
         </div>
       </main>
 
+      {/* Back to Top */}
       <BackToTop />
     </div>
   )
