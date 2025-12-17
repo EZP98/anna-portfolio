@@ -1,68 +1,52 @@
 import { useRef, useEffect, useState } from 'react'
 import { motion, useScroll, useSpring, useMotionValue } from 'framer-motion'
 
-// Portfolio items - matching annamills.xyz layout
-// Hero section items are tightly clustered and overlapping
+// Portfolio items - proper spacing, centered in content area
 const portfolioItems = [
-  // Hero cluster - tightly grouped overlapping items (y: 50-450)
-  { id: 1, x: 80, y: 50, w: 198, h: 198, rotate: 0, z: 304, type: 'video' },
-  { id: 2, x: 170, y: 95, w: 166, h: 166, rotate: 0, z: 305, type: 'video' },
-  { id: 3, x: 310, y: 65, w: 147, h: 151, rotate: 0, z: 308, type: 'image' },
-  { id: 4, x: 0, y: 110, w: 164, h: 163, rotate: 13, z: 307, type: 'image' },
-  { id: 5, x: 355, y: 130, w: 160, h: 201, rotate: 14, z: 306, type: 'image' },
-  { id: 6, x: 65, y: 190, w: 128, h: 160, rotate: -22, z: 310, type: 'image' },
-  { id: 7, x: 170, y: 185, w: 171, h: 213, rotate: 15, z: 309, type: 'image' },
-  { id: 8, x: 340, y: 260, w: 138, h: 174, rotate: -8, z: 303, type: 'video' },
-  { id: 9, x: 60, y: 280, w: 150, h: 150, rotate: -6, z: 311, type: 'video' },
-  { id: 10, x: 200, y: 320, w: 150, h: 150, rotate: 3, z: 312, type: 'image' },
+  // Hero cluster - scattered overlapping items
+  { id: 1, x: 40, y: 60, w: 180, h: 180, rotate: -3, z: 10 },
+  { id: 2, x: 200, y: 40, w: 160, h: 200, rotate: 5, z: 11 },
+  { id: 3, x: 340, y: 80, w: 150, h: 150, rotate: -2, z: 12 },
+  { id: 4, x: 120, y: 200, w: 170, h: 210, rotate: 8, z: 13 },
+  { id: 5, x: 280, y: 180, w: 140, h: 180, rotate: -6, z: 14 },
+  { id: 6, x: 30, y: 320, w: 160, h: 160, rotate: 4, z: 15 },
+  { id: 7, x: 180, y: 350, w: 180, h: 140, rotate: -4, z: 16 },
+  { id: 8, x: 350, y: 300, w: 150, h: 190, rotate: 6, z: 17 },
 
-  // Second cluster - overlapping videos (y: 450-850)
-  { id: 11, x: 20, y: 470, w: 279, h: 344, rotate: -5, z: 353, type: 'video' },
-  { id: 12, x: 280, y: 540, w: 258, h: 322, rotate: 8, z: 354, type: 'video' },
+  // Second section - larger images
+  { id: 9, x: 20, y: 520, w: 260, h: 320, rotate: -4, z: 20 },
+  { id: 10, x: 300, y: 560, w: 240, h: 300, rotate: 5, z: 21 },
 
-  // Third section - scattered images (y: 850-1350)
-  { id: 13, x: 180, y: 860, w: 175, h: 216, rotate: 0, z: 313, type: 'image' },
-  { id: 14, x: 15, y: 920, w: 184, h: 183, rotate: -10, z: 314, type: 'image' },
-  { id: 15, x: 310, y: 890, w: 148, h: 192, rotate: 14, z: 315, type: 'image' },
-  { id: 16, x: 420, y: 950, w: 140, h: 174, rotate: -17, z: 316, type: 'image' },
-  { id: 17, x: 340, y: 1070, w: 167, h: 174, rotate: -13, z: 317, type: 'image' },
-  { id: 18, x: 30, y: 1080, w: 175, h: 175, rotate: -15, z: 318, type: 'image' },
-  { id: 19, x: 185, y: 1100, w: 172, h: 213, rotate: 12, z: 319, type: 'image' },
+  // Third section - mixed sizes
+  { id: 11, x: 60, y: 880, w: 200, h: 250, rotate: 3, z: 25 },
+  { id: 12, x: 280, y: 900, w: 180, h: 220, rotate: -5, z: 26 },
+  { id: 13, x: 140, y: 1100, w: 220, h: 180, rotate: 4, z: 27 },
+  { id: 14, x: 360, y: 1080, w: 160, h: 200, rotate: -3, z: 28 },
 
-  // Grid videos - 2 columns (y: 1400-2100)
-  { id: 20, x: 0, y: 1400, w: 325, h: 325, rotate: 0, z: 320, type: 'video' },
-  { id: 21, x: 340, y: 1400, w: 327, h: 326, rotate: 0, z: 321, type: 'video' },
-  { id: 22, x: 0, y: 1740, w: 329, h: 328, rotate: 0, z: 322, type: 'video' },
-  { id: 23, x: 340, y: 1740, w: 329, h: 329, rotate: 0, z: 323, type: 'video' },
+  // Grid section - 2 columns
+  { id: 15, x: 20, y: 1350, w: 260, h: 260, rotate: 0, z: 30 },
+  { id: 16, x: 300, y: 1350, w: 260, h: 260, rotate: 0, z: 31 },
+  { id: 17, x: 20, y: 1630, w: 260, h: 260, rotate: 0, z: 32 },
+  { id: 18, x: 300, y: 1630, w: 260, h: 260, rotate: 0, z: 33 },
 
-  // Stacked polaroid-style images (y: 2100-2400)
-  { id: 24, x: 230, y: 2150, w: 146, h: 207, rotate: 10, z: 344, type: 'image' },
-  { id: 25, x: 180, y: 2170, w: 146, h: 212, rotate: 7, z: 345, type: 'image' },
-  { id: 26, x: 245, y: 2175, w: 146, h: 206, rotate: -4, z: 346, type: 'image' },
-  { id: 27, x: 260, y: 2195, w: 149, h: 207, rotate: 0, z: 347, type: 'image' },
-  { id: 28, x: 250, y: 2190, w: 145, h: 206, rotate: -4, z: 348, type: 'image' },
-  { id: 29, x: 220, y: 2185, w: 149, h: 210, rotate: -9, z: 349, type: 'image' },
+  // Stacked photos section
+  { id: 19, x: 180, y: 1950, w: 140, h: 190, rotate: -8, z: 40 },
+  { id: 20, x: 200, y: 1970, w: 140, h: 190, rotate: 3, z: 41 },
+  { id: 21, x: 220, y: 1990, w: 140, h: 190, rotate: -3, z: 42 },
 
-  // More grid videos (y: 2500-3400)
-  { id: 30, x: 0, y: 2500, w: 327, h: 328, rotate: 0, z: 330, type: 'video' },
-  { id: 31, x: 340, y: 2500, w: 329, h: 329, rotate: 0, z: 331, type: 'video' },
-  { id: 32, x: 0, y: 2850, w: 329, h: 330, rotate: 0, z: 332, type: 'video' },
-  { id: 33, x: 340, y: 2850, w: 330, h: 330, rotate: 0, z: 333, type: 'video' },
-  { id: 34, x: 0, y: 3200, w: 329, h: 410, rotate: 0, z: 334, type: 'video' },
-  { id: 35, x: 340, y: 3200, w: 330, h: 412, rotate: 0, z: 335, type: 'video' },
+  // More grid
+  { id: 22, x: 20, y: 2250, w: 260, h: 260, rotate: 0, z: 50 },
+  { id: 23, x: 300, y: 2250, w: 260, h: 260, rotate: 0, z: 51 },
+  { id: 24, x: 20, y: 2530, w: 260, h: 320, rotate: 0, z: 52 },
+  { id: 25, x: 300, y: 2530, w: 260, h: 320, rotate: 0, z: 53 },
 
-  // Bottom scattered section (y: 3700-5500)
-  { id: 36, x: 20, y: 3700, w: 207, h: 259, rotate: -9, z: 336, type: 'image' },
-  { id: 37, x: 360, y: 3750, w: 268, h: 360, rotate: 6, z: 337, type: 'image' },
-  { id: 38, x: 140, y: 3920, w: 247, h: 225, rotate: 4, z: 338, type: 'image' },
-  { id: 39, x: 370, y: 4010, w: 208, h: 208, rotate: -4, z: 339, type: 'video' },
-  { id: 40, x: 340, y: 4260, w: 306, h: 428, rotate: 0, z: 340, type: 'image' },
-  { id: 41, x: 0, y: 4420, w: 329, h: 413, rotate: -9, z: 341, type: 'video' },
-  { id: 42, x: 340, y: 4700, w: 306, h: 292, rotate: 0, z: 342, type: 'image' },
-  { id: 43, x: 0, y: 4850, w: 328, h: 368, rotate: 0, z: 343, type: 'video' },
-  { id: 44, x: 340, y: 5010, w: 309, h: 311, rotate: 0, z: 350, type: 'image' },
-  { id: 45, x: 0, y: 5250, w: 313, h: 336, rotate: -3, z: 351, type: 'video' },
-  { id: 46, x: 340, y: 5330, w: 308, h: 310, rotate: 0, z: 352, type: 'video' },
+  // Bottom scattered
+  { id: 26, x: 60, y: 2900, w: 200, h: 260, rotate: -6, z: 60 },
+  { id: 27, x: 300, y: 2940, w: 220, h: 280, rotate: 4, z: 61 },
+  { id: 28, x: 120, y: 3200, w: 240, h: 200, rotate: 3, z: 62 },
+  { id: 29, x: 340, y: 3180, w: 180, h: 240, rotate: -5, z: 63 },
+  { id: 30, x: 40, y: 3450, w: 260, h: 320, rotate: 0, z: 64 },
+  { id: 31, x: 320, y: 3480, w: 240, h: 300, rotate: 0, z: 65 },
 ]
 
 // All portfolio images - creative/artistic photos
@@ -84,18 +68,16 @@ const portfolioImages = [
   'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=600&h=700&fit=crop',
 ]
 
-// Portfolio Card Content - All images, no black boxes
-function CardContent({ item, index }: { item: typeof portfolioItems[0], index: number }) {
+// Portfolio Card Content
+function CardContent({ index }: { index: number }) {
   const imageUrl = portfolioImages[index % portfolioImages.length]
   return (
-    <div className="w-full h-full relative overflow-hidden group">
-      <img
-        src={imageUrl}
-        alt={`Portfolio piece ${item.id}`}
-        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-        loading="lazy"
-      />
-    </div>
+    <img
+      src={imageUrl}
+      alt={`Portfolio ${index + 1}`}
+      className="w-full h-full object-cover"
+      loading="lazy"
+    />
   )
 }
 
@@ -121,16 +103,16 @@ function DraggableCard({ item, index }: { item: typeof portfolioItems[0], index:
         width: item.w,
         height: item.h,
         rotate: item.rotate,
-        zIndex: isDragging ? 1000 : item.z,
+        zIndex: isDragging ? 100 : item.z,
         cursor: 'grab',
         borderRadius: 12,
-        boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.12)',
       }}
-      whileDrag={{ cursor: 'grabbing', scale: 1.02 }}
+      whileDrag={{ cursor: 'grabbing', scale: 1.03 }}
       whileHover={{ scale: 1.02 }}
-      className="select-none overflow-hidden"
+      className="select-none overflow-hidden bg-neutral-100"
     >
-      <CardContent item={item} index={index} />
+      <CardContent index={index} />
     </motion.div>
   )
 }
@@ -140,7 +122,7 @@ function Sidebar() {
   const [activeSection, setActiveSection] = useState('work')
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-[240px] bg-white z-50 flex flex-col items-center py-10 px-6 border-r border-neutral-100">
+    <aside className="fixed left-0 top-0 h-screen w-[240px] bg-white z-[100] flex flex-col items-center py-10 px-6 border-r border-neutral-100 shadow-sm">
       {/* Name */}
       <h1 className="text-[28px] font-black leading-[0.95] tracking-tight text-center mb-2">
         ANNA<br />MILLS
@@ -228,31 +210,32 @@ function App() {
   const { scrollYProgress } = useScroll()
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 })
 
-  const contentHeight = 5800
+  const contentHeight = 4000
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Sidebar - higher z-index */}
       <Sidebar />
 
+      {/* Main content area */}
       <main
         ref={containerRef}
-        className="ml-[240px] relative"
-        style={{ height: contentHeight }}
+        className="ml-[240px] relative z-10"
+        style={{ minHeight: contentHeight }}
       >
         {/* Progress Bar */}
         <motion.div
-          className="fixed top-0 left-[240px] right-0 h-[2px] bg-black z-40 origin-left"
+          className="fixed top-0 left-[240px] right-0 h-[2px] bg-black z-30 origin-left"
           style={{ scaleX: smoothProgress }}
         />
 
-        {/* Portfolio Items */}
-        <div
-          className="relative mx-auto"
-          style={{ width: 700, height: contentHeight, paddingTop: 40 }}
-        >
+        {/* Portfolio Items Container */}
+        <div className="relative p-8" style={{ maxWidth: 600 }}>
           {portfolioItems.map((item, index) => (
             <DraggableCard key={item.id} item={item} index={index} />
           ))}
+          {/* Spacer for scroll height */}
+          <div style={{ height: contentHeight }} />
         </div>
       </main>
 
