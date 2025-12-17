@@ -96,7 +96,6 @@ function Sidebar() {
         top: 0,
         height: '100vh',
         width: '320px',
-        backgroundColor: '#ffffff',
         zIndex: 99999,
         display: 'flex',
         flexDirection: 'column',
