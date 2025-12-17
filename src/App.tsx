@@ -268,6 +268,7 @@ function App() {
       <main
         ref={containerRef}
         style={{
+          marginLeft: '320px',
           position: 'relative',
           minHeight: '100vh',
           overflowX: 'hidden',
@@ -285,10 +286,7 @@ function App() {
             position: 'relative',
             width: '100%',
             height: contentHeight,
-            paddingTop: '40px',
-            paddingRight: '40px',
-            paddingBottom: '40px',
-            paddingLeft: '340px', // 320px sidebar + 20px gap
+            padding: '40px',
           }}
         >
           {portfolioItems.map((item) => (
