@@ -1,52 +1,48 @@
 import { useRef, useEffect, useState } from 'react'
 import { motion, useScroll, useSpring, useMotionValue } from 'framer-motion'
 
-// Portfolio items - proper spacing, centered in content area
+// Portfolio items - organic scattered layout like annamills.xyz
 const portfolioItems = [
-  // Hero cluster - scattered overlapping items
-  { id: 1, x: 40, y: 60, w: 180, h: 180, rotate: -3, z: 10 },
-  { id: 2, x: 200, y: 40, w: 160, h: 200, rotate: 5, z: 11 },
-  { id: 3, x: 340, y: 80, w: 150, h: 150, rotate: -2, z: 12 },
-  { id: 4, x: 120, y: 200, w: 170, h: 210, rotate: 8, z: 13 },
-  { id: 5, x: 280, y: 180, w: 140, h: 180, rotate: -6, z: 14 },
-  { id: 6, x: 30, y: 320, w: 160, h: 160, rotate: 4, z: 15 },
-  { id: 7, x: 180, y: 350, w: 180, h: 140, rotate: -4, z: 16 },
-  { id: 8, x: 350, y: 300, w: 150, h: 190, rotate: 6, z: 17 },
+  // Top cluster - overlapping chaos
+  { id: 1, x: 50, y: 30, w: 160, h: 160, rotate: 0, z: 5 },
+  { id: 2, x: 140, y: 50, w: 140, h: 180, rotate: 8, z: 6 },
+  { id: 3, x: 250, y: 20, w: 180, h: 140, rotate: -5, z: 7 },
+  { id: 4, x: 380, y: 60, w: 150, h: 200, rotate: 12, z: 8 },
+  { id: 5, x: 80, y: 150, w: 170, h: 210, rotate: -10, z: 9 },
+  { id: 6, x: 220, y: 130, w: 150, h: 150, rotate: 5, z: 10 },
+  { id: 7, x: 340, y: 180, w: 180, h: 160, rotate: -8, z: 11 },
+  { id: 8, x: 30, y: 300, w: 200, h: 160, rotate: 6, z: 12 },
+  { id: 9, x: 180, y: 280, w: 160, h: 200, rotate: -12, z: 13 },
+  { id: 10, x: 320, y: 320, w: 190, h: 170, rotate: 4, z: 14 },
 
-  // Second section - larger images
-  { id: 9, x: 20, y: 520, w: 260, h: 320, rotate: -4, z: 20 },
-  { id: 10, x: 300, y: 560, w: 240, h: 300, rotate: 5, z: 21 },
+  // Middle section - larger overlapping
+  { id: 11, x: 20, y: 480, w: 280, h: 350, rotate: -5, z: 20 },
+  { id: 12, x: 260, y: 520, w: 260, h: 320, rotate: 7, z: 21 },
 
-  // Third section - mixed sizes
-  { id: 11, x: 60, y: 880, w: 200, h: 250, rotate: 3, z: 25 },
-  { id: 12, x: 280, y: 900, w: 180, h: 220, rotate: -5, z: 26 },
-  { id: 13, x: 140, y: 1100, w: 220, h: 180, rotate: 4, z: 27 },
-  { id: 14, x: 360, y: 1080, w: 160, h: 200, rotate: -3, z: 28 },
+  // Scattered section
+  { id: 13, x: 60, y: 870, w: 200, h: 250, rotate: 10, z: 25 },
+  { id: 14, x: 230, y: 850, w: 170, h: 220, rotate: -6, z: 26 },
+  { id: 15, x: 380, y: 900, w: 150, h: 190, rotate: 8, z: 27 },
+  { id: 16, x: 120, y: 1080, w: 220, h: 180, rotate: -8, z: 28 },
+  { id: 17, x: 320, y: 1100, w: 190, h: 240, rotate: 5, z: 29 },
 
-  // Grid section - 2 columns
-  { id: 15, x: 20, y: 1350, w: 260, h: 260, rotate: 0, z: 30 },
-  { id: 16, x: 300, y: 1350, w: 260, h: 260, rotate: 0, z: 31 },
-  { id: 17, x: 20, y: 1630, w: 260, h: 260, rotate: 0, z: 32 },
-  { id: 18, x: 300, y: 1630, w: 260, h: 260, rotate: 0, z: 33 },
+  // Grid-ish but with rotation
+  { id: 18, x: 30, y: 1320, w: 250, h: 250, rotate: -3, z: 30 },
+  { id: 19, x: 290, y: 1340, w: 240, h: 260, rotate: 4, z: 31 },
+  { id: 20, x: 50, y: 1600, w: 260, h: 280, rotate: 2, z: 32 },
+  { id: 21, x: 300, y: 1620, w: 230, h: 250, rotate: -5, z: 33 },
 
-  // Stacked photos section
-  { id: 19, x: 180, y: 1950, w: 140, h: 190, rotate: -8, z: 40 },
-  { id: 20, x: 200, y: 1970, w: 140, h: 190, rotate: 3, z: 41 },
-  { id: 21, x: 220, y: 1990, w: 140, h: 190, rotate: -3, z: 42 },
+  // Polaroid stack
+  { id: 22, x: 150, y: 1920, w: 130, h: 170, rotate: -15, z: 40 },
+  { id: 23, x: 180, y: 1940, w: 130, h: 170, rotate: 8, z: 41 },
+  { id: 24, x: 210, y: 1960, w: 130, h: 170, rotate: -5, z: 42 },
+  { id: 25, x: 240, y: 1980, w: 130, h: 170, rotate: 12, z: 43 },
 
-  // More grid
-  { id: 22, x: 20, y: 2250, w: 260, h: 260, rotate: 0, z: 50 },
-  { id: 23, x: 300, y: 2250, w: 260, h: 260, rotate: 0, z: 51 },
-  { id: 24, x: 20, y: 2530, w: 260, h: 320, rotate: 0, z: 52 },
-  { id: 25, x: 300, y: 2530, w: 260, h: 320, rotate: 0, z: 53 },
-
-  // Bottom scattered
-  { id: 26, x: 60, y: 2900, w: 200, h: 260, rotate: -6, z: 60 },
-  { id: 27, x: 300, y: 2940, w: 220, h: 280, rotate: 4, z: 61 },
-  { id: 28, x: 120, y: 3200, w: 240, h: 200, rotate: 3, z: 62 },
-  { id: 29, x: 340, y: 3180, w: 180, h: 240, rotate: -5, z: 63 },
-  { id: 30, x: 40, y: 3450, w: 260, h: 320, rotate: 0, z: 64 },
-  { id: 31, x: 320, y: 3480, w: 240, h: 300, rotate: 0, z: 65 },
+  // Bottom large items
+  { id: 26, x: 40, y: 2200, w: 280, h: 320, rotate: -4, z: 50 },
+  { id: 27, x: 300, y: 2240, w: 250, h: 300, rotate: 6, z: 51 },
+  { id: 28, x: 80, y: 2560, w: 240, h: 200, rotate: 5, z: 52 },
+  { id: 29, x: 310, y: 2540, w: 220, h: 280, rotate: -7, z: 53 },
 ]
 
 // All portfolio images - creative/artistic photos
@@ -210,32 +206,22 @@ function App() {
   const { scrollYProgress } = useScroll()
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 })
 
-  const contentHeight = 4000
-
   return (
     <div className="min-h-screen bg-white">
-      {/* Sidebar - higher z-index */}
       <Sidebar />
 
-      {/* Main content area */}
-      <main
-        ref={containerRef}
-        className="ml-[240px] relative z-10"
-        style={{ minHeight: contentHeight }}
-      >
+      <main ref={containerRef} className="ml-[240px]">
         {/* Progress Bar */}
         <motion.div
           className="fixed top-0 left-[240px] right-0 h-[2px] bg-black z-30 origin-left"
           style={{ scaleX: smoothProgress }}
         />
 
-        {/* Portfolio Items Container */}
-        <div className="relative p-8" style={{ maxWidth: 600 }}>
+        {/* Portfolio Items - wide container for scattered layout */}
+        <div className="relative" style={{ width: 580, height: 3000, padding: 20 }}>
           {portfolioItems.map((item, index) => (
             <DraggableCard key={item.id} item={item} index={index} />
           ))}
-          {/* Spacer for scroll height */}
-          <div style={{ height: contentHeight }} />
         </div>
       </main>
 
