@@ -65,78 +65,41 @@ const portfolioItems = [
   { id: 46, x: 340, y: 5330, w: 308, h: 310, rotate: 0, z: 352, type: 'video' },
 ]
 
-// Modern grayscale/muted images for cohesive look
-const sampleImages = [
-  'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=700&fit=crop&sat=-100',
+// All portfolio images - creative/artistic photos
+const portfolioImages = [
+  'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=700&fit=crop',
   'https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=600&h=600&fit=crop',
   'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&h=700&fit=crop',
-  'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=600&fit=crop&sat=-100',
+  'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=600&fit=crop',
   'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=600&h=700&fit=crop',
-  'https://images.unsplash.com/photo-1549490349-8643362247b5?w=600&h=600&fit=crop&sat=-100',
+  'https://images.unsplash.com/photo-1549490349-8643362247b5?w=600&h=600&fit=crop',
   'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&h=700&fit=crop',
   'https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=600&h=600&fit=crop',
-  'https://images.unsplash.com/photo-1482160549825-59d1b23cb208?w=600&h=700&fit=crop&sat=-100',
+  'https://images.unsplash.com/photo-1482160549825-59d1b23cb208?w=600&h=700&fit=crop',
   'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&h=600&fit=crop',
+  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&h=700&fit=crop',
+  'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&h=600&fit=crop',
+  'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&h=700&fit=crop',
+  'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&h=600&fit=crop',
+  'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=600&h=700&fit=crop',
 ]
 
-// Modern minimal video thumbnails - sophisticated dark tones
-const videoThumbnails = [
-  { bg: '#1a1a1a', accent: '#ffffff' },
-  { bg: '#0a0a0a', accent: '#e5e5e5' },
-  { bg: '#171717', accent: '#fafafa' },
-  { bg: '#0f0f0f', accent: '#d4d4d4' },
-  { bg: '#141414', accent: '#f5f5f5' },
-  { bg: '#1c1c1c', accent: '#e0e0e0' },
-  { bg: '#0d0d0d', accent: '#ffffff' },
-  { bg: '#181818', accent: '#f0f0f0' },
-]
-
-// Portfolio Card Content - Modern Design
+// Portfolio Card Content - All images, no black boxes
 function CardContent({ item, index }: { item: typeof portfolioItems[0], index: number }) {
-  if (item.type === 'video') {
-    const style = videoThumbnails[index % videoThumbnails.length]
-    return (
-      <div
-        className="w-full h-full flex items-center justify-center relative group"
-        style={{ backgroundColor: style.bg }}
-      >
-        {/* Subtle noise texture */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-        }} />
-        {/* Modern play button */}
-        <div
-          className="w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110"
-          style={{
-            backgroundColor: `${style.accent}10`,
-            border: `1px solid ${style.accent}20`,
-          }}
-        >
-          <svg width="18" height="20" viewBox="0 0 18 20" fill="none">
-            <path d="M0 0V20L18 10L0 0Z" fill={style.accent} fillOpacity="0.8" />
-          </svg>
-        </div>
-      </div>
-    )
-  } else {
-    const imageUrl = sampleImages[index % sampleImages.length]
-    const isGrayscale = index % 3 === 0
-    return (
-      <div className="w-full h-full relative overflow-hidden group">
-        <img
-          src={imageUrl}
-          alt={`Portfolio piece ${item.id}`}
-          className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${isGrayscale ? 'grayscale group-hover:grayscale-0' : ''}`}
-          loading="lazy"
-        />
-        {/* Subtle overlay on hover */}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
-      </div>
-    )
-  }
+  const imageUrl = portfolioImages[index % portfolioImages.length]
+  return (
+    <div className="w-full h-full relative overflow-hidden group">
+      <img
+        src={imageUrl}
+        alt={`Portfolio piece ${item.id}`}
+        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        loading="lazy"
+      />
+    </div>
+  )
 }
 
-// Draggable Portfolio Card - Modern with subtle shadows
+// Draggable Portfolio Card
 function DraggableCard({ item, index }: { item: typeof portfolioItems[0], index: number }) {
   const x = useMotionValue(0)
   const y = useMotionValue(0)
@@ -146,7 +109,7 @@ function DraggableCard({ item, index }: { item: typeof portfolioItems[0], index:
     <motion.div
       drag
       dragMomentum={false}
-      dragElastic={0.05}
+      dragElastic={0.1}
       onDragStart={() => setIsDragging(true)}
       onDragEnd={() => setIsDragging(false)}
       style={{
@@ -160,26 +123,11 @@ function DraggableCard({ item, index }: { item: typeof portfolioItems[0], index:
         rotate: item.rotate,
         zIndex: isDragging ? 1000 : item.z,
         cursor: 'grab',
-        borderRadius: 16,
-        boxShadow: isDragging
-          ? '0 30px 60px -15px rgba(0, 0, 0, 0.3)'
-          : '0 4px 20px -5px rgba(0, 0, 0, 0.1)',
+        borderRadius: 12,
+        boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
       }}
-      whileDrag={{
-        cursor: 'grabbing',
-        scale: 1.03,
-      }}
-      whileHover={{
-        scale: 1.02,
-        boxShadow: '0 10px 40px -10px rgba(0, 0, 0, 0.15)',
-      }}
-      initial={{ opacity: 0, scale: 0.95 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true, margin: '-30px' }}
-      transition={{
-        duration: 0.5,
-        ease: [0.25, 0.1, 0.25, 1],
-      }}
+      whileDrag={{ cursor: 'grabbing', scale: 1.02 }}
+      whileHover={{ scale: 1.02 }}
       className="select-none overflow-hidden"
     >
       <CardContent item={item} index={index} />
@@ -187,196 +135,120 @@ function DraggableCard({ item, index }: { item: typeof portfolioItems[0], index:
   )
 }
 
-// Sidebar Navigation - Modern Minimal Design
+// Sidebar - Clean and Simple
 function Sidebar() {
   const [activeSection, setActiveSection] = useState('work')
-  const [hoveredNav, setHoveredNav] = useState<string | null>(null)
 
   return (
-    <motion.aside
-      initial={{ x: -50, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-      className="fixed left-0 top-0 h-screen w-[260px] bg-[#fafafa] z-50 flex flex-col items-center py-12 px-8"
-    >
-      {/* Name / Logo - Modern Typography */}
-      <motion.div
-        className="mb-6 text-center"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.6 }}
-      >
-        <h1 className="text-[32px] font-bold leading-[1] tracking-[-0.02em] text-neutral-900">
-          ANNA<br />MILLS
-        </h1>
-        <div className="mt-2 w-8 h-[2px] bg-neutral-900 mx-auto" />
-      </motion.div>
+    <aside className="fixed left-0 top-0 h-screen w-[240px] bg-white z-50 flex flex-col items-center py-10 px-6 border-r border-neutral-100">
+      {/* Name */}
+      <h1 className="text-[28px] font-black leading-[0.95] tracking-tight text-center mb-2">
+        ANNA<br />MILLS
+      </h1>
 
-      {/* Subtitle - Clean */}
-      <motion.p
-        className="text-[11px] text-neutral-400 tracking-[0.2em] uppercase mb-8"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4, duration: 0.6 }}
-      >
+      {/* Role */}
+      <p className="text-[10px] text-neutral-400 tracking-[0.15em] uppercase mb-6">
         Creative Director
-      </motion.p>
+      </p>
 
-      {/* Profile Image - Modern rounded */}
-      <motion.div
-        className="w-28 h-28 mb-8 overflow-hidden rounded-full ring-1 ring-neutral-200"
-        whileHover={{ scale: 1.05 }}
-        transition={{ duration: 0.3 }}
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-      >
+      {/* Profile Image */}
+      <div className="w-24 h-24 mb-6 overflow-hidden rounded-full">
         <img
-          src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&h=300&fit=crop&q=80"
+          src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&h=300&fit=crop"
           alt="Portrait"
           className="w-full h-full object-cover"
-          style={{ filter: 'grayscale(30%)' }}
         />
-      </motion.div>
+      </div>
 
-      {/* Navigation - Vertical Modern */}
-      <nav className="flex flex-col items-center gap-3 mb-8">
-        {['ABOUT', 'WORK', 'CONTACT'].map((item, i) => (
-          <motion.a
+      {/* Navigation */}
+      <nav className="flex flex-col items-center gap-2 mb-6">
+        {['ABOUT', 'WORK', 'CONTACT'].map((item) => (
+          <a
             key={item}
             href={`#${item.toLowerCase()}`}
             onClick={() => setActiveSection(item.toLowerCase())}
-            onMouseEnter={() => setHoveredNav(item)}
-            onMouseLeave={() => setHoveredNav(null)}
-            className="relative text-[11px] font-medium tracking-[0.15em] transition-colors"
-            style={{
-              color: activeSection === item.toLowerCase() ? '#171717' : '#a3a3a3',
-            }}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.5 + i * 0.1, duration: 0.4 }}
+            className={`text-[10px] font-medium tracking-[0.12em] transition-colors ${
+              activeSection === item.toLowerCase()
+                ? 'text-black'
+                : 'text-neutral-400 hover:text-black'
+            }`}
           >
             {item}
-            <motion.span
-              className="absolute -bottom-1 left-0 h-[1px] bg-neutral-900"
-              initial={{ width: 0 }}
-              animate={{
-                width: activeSection === item.toLowerCase() || hoveredNav === item ? '100%' : 0
-              }}
-              transition={{ duration: 0.2 }}
-            />
-          </motion.a>
+          </a>
         ))}
       </nav>
+
+      {/* Description */}
+      <p className="text-[10px] text-neutral-400 text-center leading-relaxed mb-6 px-2">
+        Welcome to my portfolio. Scroll to explore my work.
+      </p>
 
       {/* Spacer */}
       <div className="flex-1" />
 
-      {/* Social/Contact - Bottom */}
-      <motion.div
-        className="flex items-center gap-4 mb-4"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8, duration: 0.4 }}
-      >
-        {['IG', 'TW', 'BE'].map((social) => (
-          <a
-            key={social}
-            href="#"
-            className="text-[10px] font-medium tracking-wider text-neutral-400 hover:text-neutral-900 transition-colors"
-          >
-            {social}
+      {/* Social */}
+      <div className="flex items-center gap-4">
+        {['IG', 'BE', 'LI'].map((s) => (
+          <a key={s} href="#" className="text-[9px] text-neutral-300 hover:text-black transition-colors">
+            {s}
           </a>
         ))}
-      </motion.div>
-
-      {/* Copyright */}
-      <motion.p
-        className="text-[9px] text-neutral-300 tracking-wider"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.9, duration: 0.4 }}
-      >
-        © 2024
-      </motion.p>
-    </motion.aside>
+      </div>
+    </aside>
   )
 }
 
-// Back to Top Button - Modern Minimal
+// Back to Top Button
 function BackToTop() {
-  const [showButton, setShowButton] = useState(false)
+  const [show, setShow] = useState(false)
 
   useEffect(() => {
-    const handleScroll = () => {
-      setShowButton(window.scrollY > 500)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    const onScroll = () => setShow(window.scrollY > 400)
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
+  if (!show) return null
 
   return (
-    <motion.button
-      initial={{ opacity: 0, y: 20 }}
-      animate={{
-        opacity: showButton ? 1 : 0,
-        y: showButton ? 0 : 20,
-        pointerEvents: showButton ? 'auto' : 'none'
-      }}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      onClick={scrollToTop}
-      className="fixed bottom-8 right-8 w-12 h-12 bg-neutral-900 hover:bg-neutral-800 rounded-full flex items-center justify-center z-50 transition-colors shadow-lg"
+    <button
+      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      className="fixed bottom-6 right-6 w-10 h-10 bg-black text-white rounded-full flex items-center justify-center z-50 hover:bg-neutral-800 transition-colors"
     >
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
         <path d="M18 15l-6-6-6 6" />
       </svg>
-    </motion.button>
+    </button>
   )
 }
 
-// Main App - Modern Clean Design
+// Main App
 function App() {
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll()
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 })
 
-  // Content height based on last item position
   const contentHeight = 5800
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Subtle background pattern */}
-      <div
-        className="fixed inset-0 pointer-events-none opacity-[0.02]"
-        style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, #000 1px, transparent 0)`,
-          backgroundSize: '32px 32px',
-        }}
-      />
-
-      {/* Sidebar */}
       <Sidebar />
 
-      {/* Main Content Area */}
       <main
         ref={containerRef}
-        className="ml-[260px] relative"
+        className="ml-[240px] relative"
         style={{ height: contentHeight }}
       >
-        {/* Progress Bar - Modern thin line */}
+        {/* Progress Bar */}
         <motion.div
-          className="fixed top-0 left-[260px] right-0 h-[1px] bg-neutral-900 z-40 origin-left"
+          className="fixed top-0 left-[240px] right-0 h-[2px] bg-black z-40 origin-left"
           style={{ scaleX: smoothProgress }}
         />
 
-        {/* Portfolio Items Container */}
+        {/* Portfolio Items */}
         <div
-          className="relative mx-auto pt-8"
-          style={{ width: 680, height: contentHeight }}
+          className="relative mx-auto"
+          style={{ width: 700, height: contentHeight, paddingTop: 40 }}
         >
           {portfolioItems.map((item, index) => (
             <DraggableCard key={item.id} item={item} index={index} />
@@ -384,7 +256,6 @@ function App() {
         </div>
       </main>
 
-      {/* Back to Top */}
       <BackToTop />
     </div>
   )
