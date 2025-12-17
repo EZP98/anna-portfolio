@@ -260,7 +260,7 @@ function App() {
   const contentHeight = maxY + 300
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen">
       {/* Sidebar */}
       <Sidebar />
 
