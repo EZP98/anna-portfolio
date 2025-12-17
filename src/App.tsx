@@ -1,142 +1,137 @@
 import { useRef, useEffect, useState } from 'react'
 import { motion, useScroll, useSpring, useMotionValue } from 'framer-motion'
 
-// Portfolio work items - graphic design pieces
+// Portfolio items - matching annamills.xyz layout exactly
+// Content area: starts at x~100 (after 300px sidebar), extends to ~700px
+// Border radius: 11px, various rotations
 const portfolioItems = [
-  // Row 1
-  { id: 1, x: 420, y: 50, w: 450, h: 380, rotate: 0, z: 10, bg: '#ffffff', content: 'typography' },
-  { id: 2, x: 920, y: 30, w: 280, h: 250, rotate: 0, z: 11, bg: '#1a1a1a', content: 'poster-green' },
-  { id: 3, x: 920, y: 320, w: 300, h: 280, rotate: 0, z: 12, bg: '#e8e8e8', content: 'script' },
-  // Row 2
-  { id: 4, x: 450, y: 480, w: 420, h: 350, rotate: 0, z: 13, bg: '#4a5d3e', content: 'organic' },
-  { id: 5, x: 900, y: 550, w: 280, h: 320, rotate: 3, z: 14, bg: '#fce4ec', content: 'blocky' },
-  // Row 3
-  { id: 6, x: 420, y: 880, w: 380, h: 320, rotate: -2, z: 15, bg: '#fff8e1', content: 'collage' },
-  { id: 7, x: 830, y: 900, w: 350, h: 350, rotate: 0, z: 16, bg: '#1a1a1a', content: 'neon' },
-  // Row 4
-  { id: 8, x: 450, y: 1250, w: 400, h: 300, rotate: 2, z: 17, bg: '#e3f2fd', content: 'minimal' },
-  { id: 9, x: 880, y: 1280, w: 320, h: 280, rotate: -3, z: 18, bg: '#f3e5f5', content: 'abstract' },
-  // Row 5
-  { id: 10, x: 420, y: 1600, w: 450, h: 380, rotate: 0, z: 19, bg: '#ffffff', content: 'editorial' },
-  { id: 11, x: 900, y: 1650, w: 300, h: 300, rotate: 4, z: 20, bg: '#ffebee', content: 'branding' },
+  // Hero section - scattered small items (y: 0-500)
+  { id: 1, x: 108, y: 70, w: 198, h: 198, rotate: 0, z: 304, type: 'video' },
+  { id: 2, x: 199, y: 114, w: 166, h: 166, rotate: 0, z: 305, type: 'video' },
+  { id: 3, x: 334, y: 84, w: 147, h: 151, rotate: 0, z: 308, type: 'image' },
+  { id: 4, x: 23, y: 132, w: 164, h: 163, rotate: 13, z: 307, type: 'image' },
+  { id: 5, x: 382, y: 148, w: 160, h: 201, rotate: 14, z: 306, type: 'image' },
+  { id: 6, x: 92, y: 209, w: 128, h: 160, rotate: -22, z: 310, type: 'image' },
+  { id: 7, x: 199, y: 209, w: 171, h: 213, rotate: 15, z: 309, type: 'image' },
+  { id: 8, x: 365, y: 280, w: 138, h: 174, rotate: -8, z: 303, type: 'video' },
+  { id: 9, x: 92, y: 296, w: 150, h: 150, rotate: -6, z: 311, type: 'video' },
+
+  // Overlapping videos section (y: 500-900)
+  { id: 10, x: 35, y: 539, w: 279, h: 344, rotate: -5, z: 353, type: 'video' },
+  { id: 11, x: 296, y: 605, w: 258, h: 322, rotate: 8, z: 354, type: 'video' },
+
+  // Middle section - images and videos (y: 900-1400)
+  { id: 12, x: 201, y: 900, w: 175, h: 216, rotate: 0, z: 312, type: 'image' },
+  { id: 13, x: 35, y: 964, w: 184, h: 183, rotate: -10, z: 313, type: 'image' },
+  { id: 14, x: 325, y: 930, w: 148, h: 192, rotate: 14, z: 317, type: 'image' },
+  { id: 15, x: 430, y: 986, w: 140, h: 174, rotate: -17, z: 318, type: 'image' },
+  { id: 16, x: 360, y: 1105, w: 167, h: 174, rotate: -13, z: 314, type: 'image' },
+  { id: 17, x: 47, y: 1111, w: 175, h: 175, rotate: -15, z: 316, type: 'image' },
+  { id: 18, x: 209, y: 1136, w: 172, h: 213, rotate: 12, z: 315, type: 'image' },
+
+  // Grid videos section (y: 1500-2200)
+  { id: 19, x: 9, y: 1500, w: 325, h: 325, rotate: 0, z: 319, type: 'video' },
+  { id: 20, x: 350, y: 1499, w: 327, h: 326, rotate: 0, z: 320, type: 'video' },
+  { id: 21, x: 7, y: 1840, w: 329, h: 328, rotate: 0, z: 321, type: 'video' },
+  { id: 22, x: 350, y: 1842, w: 329, h: 329, rotate: 0, z: 322, type: 'video' },
+
+  // Stacked images section (y: 2360-2650)
+  { id: 23, x: 250, y: 2361, w: 146, h: 207, rotate: 10, z: 344, type: 'image' },
+  { id: 24, x: 196, y: 2378, w: 146, h: 212, rotate: 7, z: 348, type: 'image' },
+  { id: 25, x: 263, y: 2383, w: 146, h: 206, rotate: -4, z: 346, type: 'image' },
+  { id: 26, x: 279, y: 2402, w: 149, h: 207, rotate: 0, z: 345, type: 'image' },
+  { id: 27, x: 267, y: 2399, w: 145, h: 206, rotate: -4, z: 347, type: 'image' },
+  { id: 28, x: 238, y: 2394, w: 149, h: 210, rotate: -9, z: 349, type: 'image' },
+
+  // More grid videos (y: 2800-3500)
+  { id: 29, x: 3, y: 2800, w: 327, h: 328, rotate: 0, z: 340, type: 'video' },
+  { id: 30, x: 347, y: 2799, w: 329, h: 329, rotate: 0, z: 341, type: 'video' },
+  { id: 31, x: 4, y: 3149, w: 329, h: 330, rotate: 0, z: 343, type: 'video' },
+  { id: 32, x: 348, y: 3148, w: 330, h: 330, rotate: 0, z: 342, type: 'video' },
+  { id: 33, x: 5, y: 3494, w: 329, h: 410, rotate: 0, z: 328, type: 'video' },
+  { id: 34, x: 350, y: 3493, w: 330, h: 412, rotate: 0, z: 350, type: 'video' },
+
+  // Bottom section (y: 4100-7000)
+  { id: 35, x: 30, y: 4167, w: 207, h: 259, rotate: -9, z: 302, type: 'image' },
+  { id: 36, x: 373, y: 4210, w: 268, h: 360, rotate: 6, z: 323, type: 'image' },
+  { id: 37, x: 152, y: 4375, w: 247, h: 225, rotate: 4, z: 324, type: 'image' },
+  { id: 38, x: 383, y: 4463, w: 208, h: 208, rotate: -4, z: 325, type: 'video' },
+  { id: 39, x: 354, y: 4712, w: 306, h: 428, rotate: 0, z: 326, type: 'image' },
+  { id: 40, x: 10, y: 4872, w: 329, h: 413, rotate: -9, z: 338, type: 'video' },
+  { id: 41, x: 354, y: 5151, w: 306, h: 292, rotate: 0, z: 327, type: 'image' },
+  { id: 42, x: 10, y: 5299, w: 328, h: 368, rotate: 0, z: 330, type: 'video' },
+  { id: 43, x: 354, y: 5456, w: 309, h: 311, rotate: 0, z: 329, type: 'image' },
+  { id: 44, x: 9, y: 5697, w: 313, h: 336, rotate: -3, z: 301, type: 'video' },
+  { id: 45, x: 355, y: 5777, w: 308, h: 310, rotate: 0, z: 331, type: 'video' },
+  { id: 46, x: 163, y: 5974, w: 175, h: 175, rotate: 9, z: 333, type: 'image' },
+  { id: 47, x: 35, y: 6107, w: 186, h: 186, rotate: -16, z: 332, type: 'image' },
+  { id: 48, x: 185, y: 6112, w: 209, h: 213, rotate: 9, z: 352, type: 'image' },
+  { id: 49, x: 431, y: 6111, w: 232, h: 360, rotate: 9, z: 334, type: 'image' },
+  { id: 50, x: 55, y: 6332, w: 354, h: 354, rotate: -5, z: 335, type: 'video' },
+  { id: 51, x: 55, y: 6696, w: 356, h: 200, rotate: 12, z: 337, type: 'video' },
+  { id: 52, x: 328, y: 6814, w: 278, h: 278, rotate: 16, z: 351, type: 'video' },
 ]
 
-// Custom Typography Art Component
-function TypographyArt({ type }: { type: string }) {
-  switch (type) {
-    case 'typography':
-      return (
-        <div className="w-full h-full flex items-center justify-center p-8">
-          <svg viewBox="0 0 400 300" className="w-full h-full">
-            {/* Hope World style spiraling typography */}
-            <text x="50" y="80" fontSize="48" fontFamily="serif" fontStyle="italic" fill="#1a1a1a">
-              <tspan>H</tspan>
-              <tspan dx="-5" dy="10">o</tspan>
-              <tspan dx="-8" dy="-5">p</tspan>
-              <tspan dx="-5" dy="8">e</tspan>
-            </text>
-            <path d="M180,60 Q220,30 260,60 T340,60" stroke="#1a1a1a" strokeWidth="3" fill="none" />
-            <circle cx="200" cy="120" r="30" stroke="#1a1a1a" strokeWidth="2" fill="none" />
-            <path d="M200,90 A30,30 0 1,1 200,150 A30,30 0 1,1 200,90" stroke="#1a1a1a" strokeWidth="2" fill="none" />
-            <text x="100" y="200" fontSize="56" fontFamily="serif" fontStyle="italic" fill="#1a1a1a">World</text>
-            <circle cx="320" cy="180" r="25" stroke="#1a1a1a" strokeWidth="2" fill="none" />
-            <path d="M320,155 A25,25 0 1,1 320,205" stroke="#1a1a1a" strokeWidth="2" fill="none" />
-          </svg>
+// Sample images for portfolio (using picsum for variety)
+const sampleImages = [
+  'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=500&fit=crop',
+  'https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=400&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=400&h=500&fit=crop',
+  'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=400&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=400&h=500&fit=crop',
+  'https://images.unsplash.com/photo-1549490349-8643362247b5?w=400&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=400&h=500&fit=crop',
+  'https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=400&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1482160549825-59d1b23cb208?w=400&h=500&fit=crop',
+  'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&h=400&fit=crop',
+]
+
+// Video placeholder colors (simulating video content)
+const videoColors = [
+  'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+  'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+  'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+  'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+  'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+  'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+  'linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)',
+  'linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)',
+  'linear-gradient(135deg, #fddb92 0%, #d1fdff 100%)',
+  'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)',
+]
+
+// Portfolio Card Content
+function CardContent({ item, index }: { item: typeof portfolioItems[0], index: number }) {
+  if (item.type === 'video') {
+    // Video placeholder with gradient
+    const gradient = videoColors[index % videoColors.length]
+    return (
+      <div
+        className="w-full h-full flex items-center justify-center"
+        style={{ background: gradient }}
+      >
+        {/* Play button overlay */}
+        <div className="w-12 h-12 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center">
+          <div className="w-0 h-0 border-t-[8px] border-t-transparent border-l-[14px] border-l-white border-b-[8px] border-b-transparent ml-1" />
         </div>
-      )
-    case 'poster-green':
-      return (
-        <div className="w-full h-full relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-green-600 to-green-900" />
-          <div className="absolute inset-0" style={{
-            backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,255,0,0.1) 10px, rgba(0,255,0,0.1) 20px)',
-          }} />
-          <div className="absolute bottom-4 right-4 text-white text-xs font-mono">CRACK</div>
-        </div>
-      )
-    case 'script':
-      return (
-        <div className="w-full h-full flex items-center justify-center">
-          <svg viewBox="0 0 200 150" className="w-3/4 h-3/4">
-            <text x="20" y="90" fontSize="36" fontFamily="cursive" fill="#1a1a1a" style={{ fontStyle: 'italic' }}>
-              Style
-            </text>
-            {/* Dotted decoration */}
-            {[...Array(20)].map((_, i) => (
-              <circle key={i} cx={30 + (i % 10) * 15} cy={110 + Math.floor(i / 10) * 15} r="2" fill="#1a1a1a" />
-            ))}
-          </svg>
-        </div>
-      )
-    case 'organic':
-      return (
-        <div className="w-full h-full flex items-center justify-center p-8">
-          <svg viewBox="0 0 300 200" className="w-full h-full">
-            <path d="M50,100 Q80,50 120,80 T180,60 T240,100 T280,80" stroke="#d4c9a8" strokeWidth="4" fill="none" />
-            <path d="M40,140 Q100,100 150,130 T250,120" stroke="#d4c9a8" strokeWidth="3" fill="none" />
-            <text x="60" y="180" fontSize="24" fontFamily="serif" fill="#d4c9a8" opacity="0.8">organic</text>
-          </svg>
-        </div>
-      )
-    case 'blocky':
-      return (
-        <div className="w-full h-full flex items-center justify-center p-6">
-          <div className="text-5xl font-black text-red-400" style={{ fontFamily: 'Impact, sans-serif', letterSpacing: '-0.05em' }}>
-            JOY
-          </div>
-        </div>
-      )
-    case 'collage':
-      return (
-        <div className="w-full h-full relative overflow-hidden">
-          <div className="absolute top-4 left-4 w-20 h-20 bg-orange-200 rounded-full" />
-          <div className="absolute bottom-8 right-8 w-32 h-16 bg-blue-200 rotate-12" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl font-serif">collage</div>
-        </div>
-      )
-    case 'neon':
-      return (
-        <div className="w-full h-full flex items-center justify-center">
-          <div className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500">
-            NEON
-          </div>
-        </div>
-      )
-    case 'minimal':
-      return (
-        <div className="w-full h-full flex items-center justify-center">
-          <div className="w-24 h-24 border-2 border-black rounded-full" />
-        </div>
-      )
-    case 'abstract':
-      return (
-        <div className="w-full h-full relative overflow-hidden p-6">
-          <div className="absolute top-6 left-6 w-16 h-16 border-4 border-purple-400 rounded-full" />
-          <div className="absolute bottom-6 right-6 w-20 h-20 bg-purple-200" />
-          <div className="absolute top-1/2 left-1/2 w-12 h-24 bg-purple-300 -rotate-45" />
-        </div>
-      )
-    case 'editorial':
-      return (
-        <div className="w-full h-full flex flex-col items-center justify-center gap-4 p-8">
-          <div className="text-6xl font-serif font-light tracking-widest">A</div>
-          <div className="w-32 h-0.5 bg-black" />
-          <div className="text-xs tracking-[0.3em] uppercase">Editorial</div>
-        </div>
-      )
-    case 'branding':
-      return (
-        <div className="w-full h-full flex items-center justify-center">
-          <div className="text-3xl font-black tracking-tighter">BRAND</div>
-        </div>
-      )
-    default:
-      return <div className="w-full h-full bg-gray-200" />
+      </div>
+    )
+  } else {
+    // Image
+    const imageUrl = sampleImages[index % sampleImages.length]
+    return (
+      <img
+        src={imageUrl}
+        alt={`Portfolio piece ${item.id}`}
+        className="w-full h-full object-cover"
+        loading="lazy"
+      />
+    )
   }
 }
 
 // Draggable Portfolio Card
-function DraggableCard({ item }: { item: typeof portfolioItems[0] }) {
+function DraggableCard({ item, index }: { item: typeof portfolioItems[0], index: number }) {
   const x = useMotionValue(0)
   const y = useMotionValue(0)
   const [isDragging, setIsDragging] = useState(false)
@@ -159,22 +154,22 @@ function DraggableCard({ item }: { item: typeof portfolioItems[0] }) {
         rotate: item.rotate,
         zIndex: isDragging ? 1000 : item.z,
         cursor: 'grab',
-        backgroundColor: item.bg,
+        borderRadius: 11,
       }}
       whileDrag={{ cursor: 'grabbing', scale: 1.02, boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' }}
       whileHover={{ scale: 1.01 }}
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: '-50px' }}
-      transition={{ duration: 0.6 }}
-      className="select-none rounded-xl overflow-hidden shadow-lg"
+      transition={{ duration: 0.5 }}
+      className="select-none overflow-hidden"
     >
-      <TypographyArt type={item.content} />
+      <CardContent item={item} index={index} />
     </motion.div>
   )
 }
 
-// Sidebar Navigation
+// Sidebar Navigation - matching annamills.xyz style
 function Sidebar() {
   const [activeSection, setActiveSection] = useState('work')
 
@@ -183,20 +178,19 @@ function Sidebar() {
       initial={{ x: -100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="fixed left-0 top-0 h-screen w-[320px] bg-white z-50 flex flex-col items-center py-12 px-8"
+      className="fixed left-0 top-0 h-screen w-[280px] bg-white z-50 flex flex-col items-center py-10 px-6 border-r border-black/5"
     >
       {/* Name / Logo */}
-      <div className="mb-6 text-center">
-        <h1 className="text-[42px] font-black leading-none tracking-tight">
+      <div className="mb-4 text-center">
+        <h1 className="text-[38px] font-black leading-[0.95] tracking-tight">
           ANNA<br />MILLS
         </h1>
       </div>
 
-      {/* Glitch/Pixel Text */}
-      <div className="mb-8 text-center">
-        <div className="text-[11px] font-mono tracking-widest text-black/70" style={{
+      {/* Glitch/Pixel Text - condensed */}
+      <div className="mb-6 text-center">
+        <div className="text-[10px] font-mono tracking-wider text-black/60 leading-relaxed" style={{
           fontFamily: 'monospace',
-          letterSpacing: '0.2em',
         }}>
           ▓▓ ▓▓▓▓ ▓▓▓ ▓▓▓ ▓▓<br />
           ▓ ▓▓▓▓▓▓▓<br />
@@ -207,47 +201,49 @@ function Sidebar() {
 
       {/* Vintage Photo */}
       <motion.div
-        className="w-36 h-44 mb-8 overflow-hidden"
-        whileHover={{ scale: 1.05 }}
+        className="w-32 h-40 mb-6 overflow-hidden rounded-sm"
+        whileHover={{ scale: 1.03 }}
       >
         <img
           src="https://images.unsplash.com/photo-1518756131217-31eb79b20e8f?w=300&h=400&fit=crop&q=80"
           alt="Vintage portrait"
-          className="w-full h-full object-cover grayscale"
+          className="w-full h-full object-cover"
           style={{ filter: 'grayscale(100%) contrast(1.1)' }}
         />
       </motion.div>
 
-      {/* Navigation - Horizontal */}
-      <nav className="flex items-center gap-6 mb-6">
-        {['ABOUT', 'WORK', 'CONTACT'].map((item) => (
-          <motion.a
-            key={item}
-            href={`#${item.toLowerCase()}`}
-            onClick={() => setActiveSection(item.toLowerCase())}
-            className={`text-[11px] font-medium tracking-wider transition-colors ${
-              activeSection === item.toLowerCase()
-                ? 'text-black'
-                : 'text-black/50 hover:text-black'
-            }`}
-            whileHover={{ y: -2 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {item}
-          </motion.a>
+      {/* Navigation - Horizontal with separators */}
+      <nav className="flex items-center gap-4 mb-5">
+        {['ABOUT', 'WORK', 'CONTACT'].map((item, i) => (
+          <div key={item} className="flex items-center gap-4">
+            <motion.a
+              href={`#${item.toLowerCase()}`}
+              onClick={() => setActiveSection(item.toLowerCase())}
+              className={`text-[10px] font-medium tracking-wider transition-colors ${
+                activeSection === item.toLowerCase()
+                  ? 'text-black'
+                  : 'text-black/40 hover:text-black'
+              }`}
+              whileHover={{ y: -1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {item}
+            </motion.a>
+            {i < 2 && <span className="text-black/20 text-[10px]">|</span>}
+          </div>
         ))}
       </nav>
 
       {/* Welcome Text */}
-      <p className="text-[11px] text-black/70 text-center leading-relaxed max-w-[200px] mb-8">
+      <p className="text-[10px] text-black/60 text-center leading-[1.6] max-w-[180px] mb-6">
         Welcome to my website! Do stick around. Scrolling is encouraged here, it makes things happen.
       </p>
 
       {/* Play Link */}
       <motion.a
         href="#play"
-        className="text-[11px] font-medium tracking-wider text-black hover:text-black/60 transition-colors"
-        whileHover={{ scale: 1.1 }}
+        className="text-[10px] font-medium tracking-wider text-black hover:text-black/50 transition-colors"
+        whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
         PLAY!
@@ -298,31 +294,33 @@ function App() {
   const { scrollYProgress } = useScroll()
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 })
 
-  // Calculate content height based on items
-  const maxY = Math.max(...portfolioItems.map(item => item.y + item.h))
-  const contentHeight = maxY + 300
+  // Content height matches annamills.xyz (7440px scaled)
+  const contentHeight = 7500
 
   return (
     <div className="min-h-screen bg-white">
       {/* Sidebar */}
       <Sidebar />
 
-      {/* Main Content Area */}
+      {/* Main Content Area - 280px sidebar, content area ~700px */}
       <main
         ref={containerRef}
-        className="ml-[320px] relative"
+        className="ml-[280px] relative"
         style={{ height: contentHeight }}
       >
         {/* Progress Bar */}
         <motion.div
-          className="fixed top-0 left-[320px] right-0 h-0.5 bg-black/20 z-40 origin-left"
+          className="fixed top-0 left-[280px] right-0 h-[2px] bg-black/10 z-40 origin-left"
           style={{ scaleX: smoothProgress }}
         />
 
-        {/* Portfolio Items */}
-        <div className="relative" style={{ width: '100%', height: contentHeight }}>
-          {portfolioItems.map((item) => (
-            <DraggableCard key={item.id} item={item} />
+        {/* Portfolio Items Container - 700px wide content area */}
+        <div
+          className="relative mx-auto"
+          style={{ width: 700, height: contentHeight }}
+        >
+          {portfolioItems.map((item, index) => (
+            <DraggableCard key={item.id} item={item} index={index} />
           ))}
         </div>
       </main>
