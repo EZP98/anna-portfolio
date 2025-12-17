@@ -268,7 +268,6 @@ function App() {
       <main
         ref={containerRef}
         style={{
-          marginLeft: '320px',
           position: 'relative',
           minHeight: '100vh',
           overflowX: 'hidden',
