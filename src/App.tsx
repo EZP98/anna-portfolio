@@ -81,7 +81,21 @@ function Sidebar() {
       initial={{ x: -100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="fixed left-0 top-0 h-screen w-[320px] bg-white z-[9999] flex flex-col items-center justify-center px-10 shadow-[4px_0_20px_rgba(0,0,0,0.05)]"
+      style={{
+        position: 'fixed',
+        left: 0,
+        top: 0,
+        height: '100vh',
+        width: '320px',
+        backgroundColor: '#ffffff',
+        zIndex: 99999,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '0 40px',
+        boxShadow: '4px 0 20px rgba(0,0,0,0.08)',
+      }}
     >
       {/* Name / Logo */}
       <div className="text-center">
@@ -223,23 +237,27 @@ function App() {
       {/* Main Content Area */}
       <main
         ref={containerRef}
-        className="ml-[320px] relative overflow-x-hidden"
-        style={{ minHeight: '100vh' }}
+        style={{
+          marginLeft: '320px',
+          position: 'relative',
+          minHeight: '100vh',
+          overflowX: 'hidden',
+          backgroundColor: '#ffffff',
+        }}
       >
         {/* Progress Bar */}
         <motion.div
-          className="fixed top-0 left-[320px] right-0 h-0.5 bg-black/20 z-40 origin-left"
-          style={{ scaleX: smoothProgress }}
+          className="fixed top-0 h-0.5 bg-black/20 origin-left"
+          style={{ left: '320px', right: 0, scaleX: smoothProgress, zIndex: 40 }}
         />
 
-        {/* Portfolio Items Container - centered */}
+        {/* Portfolio Items Container */}
         <div
-          className="relative mx-auto"
           style={{
+            position: 'relative',
             width: '100%',
-            maxWidth: '1100px',
             height: contentHeight,
-            paddingTop: '20px',
+            padding: '40px',
           }}
         >
           {portfolioItems.map((item) => (
