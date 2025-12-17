@@ -1,32 +1,32 @@
 import { useRef, useEffect, useState } from 'react'
 import { motion, useScroll, useSpring, useMotionValue } from 'framer-motion'
 
-// Portfolio work items - scattered layout like annamills.xyz
+// Portfolio work items - centered in content area with proper spacing
 const portfolioItems = [
-  // Hero cluster - top area (x starts at 40 for padding from sidebar edge)
-  { id: 1, x: 40, y: 50, w: 320, h: 240, rotate: -2, z: 10, image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=450&fit=crop' },
-  { id: 2, x: 380, y: 80, w: 280, h: 380, rotate: 3, z: 12, image: 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=500&h=700&fit=crop' },
-  { id: 3, x: 680, y: 40, w: 350, h: 260, rotate: -1, z: 11, image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&h=450&fit=crop' },
+  // Row 1 - start at y:60 to not cut off
+  { id: 1, x: 60, y: 60, w: 300, h: 220, rotate: -2, z: 10, image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=450&fit=crop' },
+  { id: 2, x: 400, y: 40, w: 260, h: 340, rotate: 2, z: 12, image: 'https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=500&h=700&fit=crop' },
+  { id: 3, x: 700, y: 80, w: 280, h: 220, rotate: -1, z: 11, image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&h=450&fit=crop' },
 
-  // Second row - overlapping
-  { id: 4, x: 40, y: 320, w: 260, h: 340, rotate: 2, z: 13, image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=450&h=600&fit=crop' },
-  { id: 5, x: 320, y: 480, w: 380, h: 280, rotate: -3, z: 15, image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=700&h=500&fit=crop' },
-  { id: 6, x: 720, y: 350, w: 300, h: 400, rotate: 1, z: 14, image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=500&h=700&fit=crop' },
+  // Row 2
+  { id: 4, x: 80, y: 320, w: 240, h: 300, rotate: 1, z: 13, image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=450&h=600&fit=crop' },
+  { id: 5, x: 360, y: 420, w: 320, h: 240, rotate: -2, z: 15, image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=700&h=500&fit=crop' },
+  { id: 6, x: 720, y: 340, w: 260, h: 340, rotate: 2, z: 14, image: 'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=500&h=700&fit=crop' },
 
-  // Third row
-  { id: 7, x: 60, y: 700, w: 340, h: 250, rotate: -2, z: 16, image: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&h=450&fit=crop' },
-  { id: 8, x: 420, y: 780, w: 280, h: 360, rotate: 4, z: 18, image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=450&h=600&fit=crop' },
-  { id: 9, x: 720, y: 760, w: 320, h: 240, rotate: -1, z: 17, image: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=600&h=450&fit=crop' },
+  // Row 3
+  { id: 7, x: 100, y: 660, w: 280, h: 220, rotate: -1, z: 16, image: 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&h=450&fit=crop' },
+  { id: 8, x: 420, y: 700, w: 240, h: 320, rotate: 3, z: 18, image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=450&h=600&fit=crop' },
+  { id: 9, x: 700, y: 720, w: 280, h: 220, rotate: -2, z: 17, image: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=600&h=450&fit=crop' },
 
-  // Fourth row
-  { id: 10, x: 40, y: 1000, w: 300, h: 380, rotate: 3, z: 19, image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&h=650&fit=crop' },
-  { id: 11, x: 360, y: 1100, w: 360, h: 270, rotate: -2, z: 20, image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=650&h=500&fit=crop' },
-  { id: 12, x: 740, y: 1050, w: 280, h: 350, rotate: 2, z: 21, image: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=450&h=600&fit=crop' },
+  // Row 4
+  { id: 10, x: 80, y: 940, w: 260, h: 340, rotate: 2, z: 19, image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&h=650&fit=crop' },
+  { id: 11, x: 380, y: 1020, w: 300, h: 240, rotate: -1, z: 20, image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=650&h=500&fit=crop' },
+  { id: 12, x: 720, y: 980, w: 240, h: 300, rotate: 1, z: 21, image: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=450&h=600&fit=crop' },
 
-  // Fifth row
-  { id: 13, x: 80, y: 1400, w: 320, h: 240, rotate: -3, z: 22, image: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&h=450&fit=crop' },
-  { id: 14, x: 420, y: 1420, w: 300, h: 380, rotate: 1, z: 24, image: 'https://images.unsplash.com/photo-1485968579169-19d4acb56a00?w=500&h=650&fit=crop' },
-  { id: 15, x: 740, y: 1380, w: 280, h: 300, rotate: -2, z: 23, image: 'https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?w=500&h=550&fit=crop' },
+  // Row 5
+  { id: 13, x: 100, y: 1320, w: 280, h: 220, rotate: -2, z: 22, image: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&h=450&fit=crop' },
+  { id: 14, x: 420, y: 1300, w: 260, h: 340, rotate: 2, z: 24, image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&h=650&fit=crop' },
+  { id: 15, x: 720, y: 1340, w: 260, h: 260, rotate: -1, z: 23, image: 'https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?w=500&h=550&fit=crop' },
 ]
 
 // Draggable Portfolio Card
@@ -81,17 +81,20 @@ function Sidebar() {
       initial={{ x: -100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="fixed left-0 top-0 h-screen w-[320px] bg-white z-[9999] flex flex-col items-center py-12 px-8 shadow-[4px_0_20px_rgba(0,0,0,0.05)]"
+      className="fixed left-0 top-0 h-screen w-[320px] bg-white z-[9999] flex flex-col items-center justify-center px-10 shadow-[4px_0_20px_rgba(0,0,0,0.05)]"
     >
       {/* Name / Logo */}
-      <div className="mb-6 text-center">
+      <div className="text-center">
         <h1 className="text-[42px] font-black leading-none tracking-tight">
           ANNA<br />MILLS
         </h1>
       </div>
 
+      {/* Spacer */}
+      <div className="h-8" />
+
       {/* Glitch/Pixel Text */}
-      <div className="mb-8 text-center">
+      <div className="text-center">
         <div className="text-[11px] font-mono tracking-widest text-black/70" style={{
           fontFamily: 'monospace',
           letterSpacing: '0.2em',
@@ -103,9 +106,12 @@ function Sidebar() {
         </div>
       </div>
 
+      {/* Spacer */}
+      <div className="h-8" />
+
       {/* Vintage Photo */}
       <motion.div
-        className="w-36 h-44 mb-8 overflow-hidden"
+        className="w-36 h-44 overflow-hidden rounded-sm"
         whileHover={{ scale: 1.05 }}
       >
         <img
@@ -116,8 +122,11 @@ function Sidebar() {
         />
       </motion.div>
 
+      {/* Spacer */}
+      <div className="h-8" />
+
       {/* Navigation - Horizontal */}
-      <nav className="flex items-center gap-6 mb-6">
+      <nav className="flex items-center gap-6">
         {['ABOUT', 'WORK', 'CONTACT'].map((item) => (
           <motion.a
             key={item}
@@ -136,10 +145,16 @@ function Sidebar() {
         ))}
       </nav>
 
+      {/* Spacer */}
+      <div className="h-4" />
+
       {/* Welcome Text */}
-      <p className="text-[11px] text-black/70 text-center leading-relaxed max-w-[200px] mb-8">
+      <p className="text-[11px] text-black/70 text-center leading-relaxed max-w-[200px]">
         Welcome to my website! Do stick around. Scrolling is encouraged here, it makes things happen.
       </p>
+
+      {/* Spacer */}
+      <div className="h-4" />
 
       {/* Play Link */}
       <motion.a
@@ -208,8 +223,8 @@ function App() {
       {/* Main Content Area */}
       <main
         ref={containerRef}
-        className="ml-[320px] relative pl-10 pt-6"
-        style={{ height: contentHeight }}
+        className="ml-[320px] relative overflow-x-hidden"
+        style={{ minHeight: '100vh' }}
       >
         {/* Progress Bar */}
         <motion.div
@@ -217,8 +232,16 @@ function App() {
           style={{ scaleX: smoothProgress }}
         />
 
-        {/* Portfolio Items */}
-        <div className="relative" style={{ width: '100%', height: contentHeight }}>
+        {/* Portfolio Items Container - centered */}
+        <div
+          className="relative mx-auto"
+          style={{
+            width: '100%',
+            maxWidth: '1100px',
+            height: contentHeight,
+            paddingTop: '20px',
+          }}
+        >
           {portfolioItems.map((item) => (
             <DraggableCard key={item.id} item={item} />
           ))}
