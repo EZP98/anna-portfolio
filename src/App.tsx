@@ -1,46 +1,142 @@
 import { useRef, useEffect, useState } from 'react'
 import { motion, useScroll, useSpring, useMotionValue } from 'framer-motion'
 
-// Portfolio images data - scattered layout with rotations
+// Portfolio work items - graphic design pieces
 const portfolioItems = [
-  { id: 1, type: 'image', src: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400', x: 350, y: 100, w: 198, h: 198, rotate: 0, z: 304 },
-  { id: 2, type: 'image', src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400', x: 580, y: 120, w: 147, h: 151, rotate: 0, z: 308 },
-  { id: 3, type: 'image', src: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400', x: 450, y: 150, w: 166, h: 166, rotate: 0, z: 305 },
-  { id: 4, type: 'image', src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400', x: 280, y: 180, w: 164, h: 163, rotate: 13, z: 307 },
-  { id: 5, type: 'image', src: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400', x: 340, y: 260, w: 128, h: 160, rotate: -22, z: 310 },
-  { id: 6, type: 'image', src: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=400', x: 460, y: 280, w: 171, h: 213, rotate: 15, z: 309 },
-  { id: 7, type: 'image', src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400', x: 620, y: 200, w: 160, h: 201, rotate: 14, z: 306 },
-  { id: 8, type: 'image', src: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400', x: 610, y: 350, w: 138, h: 174, rotate: -8, z: 303 },
-  { id: 9, type: 'image', src: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400', x: 350, y: 380, w: 150, h: 150, rotate: -6, z: 311 },
+  // Row 1
+  { id: 1, x: 420, y: 50, w: 450, h: 380, rotate: 0, z: 10, bg: '#ffffff', content: 'typography' },
+  { id: 2, x: 920, y: 30, w: 280, h: 250, rotate: 0, z: 11, bg: '#1a1a1a', content: 'poster-green' },
+  { id: 3, x: 920, y: 320, w: 300, h: 280, rotate: 0, z: 12, bg: '#e8e8e8', content: 'script' },
   // Row 2
-  { id: 10, type: 'image', src: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400', x: 460, y: 550, w: 175, h: 216, rotate: 0, z: 312 },
-  { id: 11, type: 'image', src: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400', x: 580, y: 580, w: 148, h: 192, rotate: 14, z: 317 },
-  { id: 12, type: 'image', src: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400', x: 290, y: 620, w: 184, h: 183, rotate: -10, z: 313 },
-  { id: 13, type: 'image', src: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400', x: 680, y: 650, w: 140, h: 174, rotate: -17, z: 318 },
-  { id: 14, type: 'image', src: 'https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?w=400', x: 610, y: 770, w: 167, h: 174, rotate: -13, z: 314 },
-  { id: 15, type: 'image', src: 'https://images.unsplash.com/photo-1496440737103-cd596325d314?w=400', x: 300, y: 780, w: 175, h: 175, rotate: -15, z: 316 },
-  { id: 16, type: 'image', src: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=400', x: 460, y: 800, w: 172, h: 213, rotate: 12, z: 315 },
+  { id: 4, x: 450, y: 480, w: 420, h: 350, rotate: 0, z: 13, bg: '#4a5d3e', content: 'organic' },
+  { id: 5, x: 900, y: 550, w: 280, h: 320, rotate: 3, z: 14, bg: '#fce4ec', content: 'blocky' },
   // Row 3
-  { id: 17, type: 'image', src: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400', x: 600, y: 1050, w: 327, h: 326, rotate: 0, z: 320 },
-  { id: 18, type: 'image', src: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400', x: 260, y: 1050, w: 325, h: 325, rotate: 0, z: 319 },
+  { id: 6, x: 420, y: 880, w: 380, h: 320, rotate: -2, z: 15, bg: '#fff8e1', content: 'collage' },
+  { id: 7, x: 830, y: 900, w: 350, h: 350, rotate: 0, z: 16, bg: '#1a1a1a', content: 'neon' },
   // Row 4
-  { id: 19, type: 'image', src: 'https://images.unsplash.com/photo-1504703395950-b89145a5425b?w=400', x: 260, y: 1420, w: 329, h: 328, rotate: 0, z: 321 },
-  { id: 20, type: 'image', src: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=400', x: 600, y: 1420, w: 329, h: 328, rotate: 0, z: 322 },
-  // Row 5 - scattered cards
-  { id: 21, type: 'image', src: 'https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?w=400', x: 500, y: 1800, w: 146, h: 207, rotate: 10, z: 344 },
-  { id: 22, type: 'image', src: 'https://images.unsplash.com/photo-1485968579169-a6b81ca8df80?w=400', x: 445, y: 1830, w: 146, h: 212, rotate: 7, z: 348 },
-  { id: 23, type: 'image', src: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400', x: 510, y: 1850, w: 146, h: 206, rotate: -4, z: 346 },
-  { id: 24, type: 'image', src: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400', x: 530, y: 1870, w: 149, h: 207, rotate: 0, z: 345 },
-  { id: 25, type: 'image', src: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400', x: 480, y: 1900, w: 149, h: 210, rotate: -9, z: 349 },
-  // More content
-  { id: 26, type: 'image', src: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=400', x: 260, y: 2200, w: 329, h: 327, rotate: 0, z: 340 },
-  { id: 27, type: 'image', src: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=400', x: 600, y: 2200, w: 329, h: 328, rotate: 0, z: 341 },
-  { id: 28, type: 'image', src: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400', x: 260, y: 2560, w: 329, h: 330, rotate: 0, z: 343 },
-  { id: 29, type: 'image', src: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400', x: 600, y: 2560, w: 330, h: 330, rotate: 0, z: 342 },
+  { id: 8, x: 450, y: 1250, w: 400, h: 300, rotate: 2, z: 17, bg: '#e3f2fd', content: 'minimal' },
+  { id: 9, x: 880, y: 1280, w: 320, h: 280, rotate: -3, z: 18, bg: '#f3e5f5', content: 'abstract' },
+  // Row 5
+  { id: 10, x: 420, y: 1600, w: 450, h: 380, rotate: 0, z: 19, bg: '#ffffff', content: 'editorial' },
+  { id: 11, x: 900, y: 1650, w: 300, h: 300, rotate: 4, z: 20, bg: '#ffebee', content: 'branding' },
 ]
 
-// Draggable Image Component
-function DraggableImage({ item }: { item: typeof portfolioItems[0] }) {
+// Custom Typography Art Component
+function TypographyArt({ type }: { type: string }) {
+  switch (type) {
+    case 'typography':
+      return (
+        <div className="w-full h-full flex items-center justify-center p-8">
+          <svg viewBox="0 0 400 300" className="w-full h-full">
+            {/* Hope World style spiraling typography */}
+            <text x="50" y="80" fontSize="48" fontFamily="serif" fontStyle="italic" fill="#1a1a1a">
+              <tspan>H</tspan>
+              <tspan dx="-5" dy="10">o</tspan>
+              <tspan dx="-8" dy="-5">p</tspan>
+              <tspan dx="-5" dy="8">e</tspan>
+            </text>
+            <path d="M180,60 Q220,30 260,60 T340,60" stroke="#1a1a1a" strokeWidth="3" fill="none" />
+            <circle cx="200" cy="120" r="30" stroke="#1a1a1a" strokeWidth="2" fill="none" />
+            <path d="M200,90 A30,30 0 1,1 200,150 A30,30 0 1,1 200,90" stroke="#1a1a1a" strokeWidth="2" fill="none" />
+            <text x="100" y="200" fontSize="56" fontFamily="serif" fontStyle="italic" fill="#1a1a1a">World</text>
+            <circle cx="320" cy="180" r="25" stroke="#1a1a1a" strokeWidth="2" fill="none" />
+            <path d="M320,155 A25,25 0 1,1 320,205" stroke="#1a1a1a" strokeWidth="2" fill="none" />
+          </svg>
+        </div>
+      )
+    case 'poster-green':
+      return (
+        <div className="w-full h-full relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-green-600 to-green-900" />
+          <div className="absolute inset-0" style={{
+            backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,255,0,0.1) 10px, rgba(0,255,0,0.1) 20px)',
+          }} />
+          <div className="absolute bottom-4 right-4 text-white text-xs font-mono">CRACK</div>
+        </div>
+      )
+    case 'script':
+      return (
+        <div className="w-full h-full flex items-center justify-center">
+          <svg viewBox="0 0 200 150" className="w-3/4 h-3/4">
+            <text x="20" y="90" fontSize="36" fontFamily="cursive" fill="#1a1a1a" style={{ fontStyle: 'italic' }}>
+              Style
+            </text>
+            {/* Dotted decoration */}
+            {[...Array(20)].map((_, i) => (
+              <circle key={i} cx={30 + (i % 10) * 15} cy={110 + Math.floor(i / 10) * 15} r="2" fill="#1a1a1a" />
+            ))}
+          </svg>
+        </div>
+      )
+    case 'organic':
+      return (
+        <div className="w-full h-full flex items-center justify-center p-8">
+          <svg viewBox="0 0 300 200" className="w-full h-full">
+            <path d="M50,100 Q80,50 120,80 T180,60 T240,100 T280,80" stroke="#d4c9a8" strokeWidth="4" fill="none" />
+            <path d="M40,140 Q100,100 150,130 T250,120" stroke="#d4c9a8" strokeWidth="3" fill="none" />
+            <text x="60" y="180" fontSize="24" fontFamily="serif" fill="#d4c9a8" opacity="0.8">organic</text>
+          </svg>
+        </div>
+      )
+    case 'blocky':
+      return (
+        <div className="w-full h-full flex items-center justify-center p-6">
+          <div className="text-5xl font-black text-red-400" style={{ fontFamily: 'Impact, sans-serif', letterSpacing: '-0.05em' }}>
+            JOY
+          </div>
+        </div>
+      )
+    case 'collage':
+      return (
+        <div className="w-full h-full relative overflow-hidden">
+          <div className="absolute top-4 left-4 w-20 h-20 bg-orange-200 rounded-full" />
+          <div className="absolute bottom-8 right-8 w-32 h-16 bg-blue-200 rotate-12" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl font-serif">collage</div>
+        </div>
+      )
+    case 'neon':
+      return (
+        <div className="w-full h-full flex items-center justify-center">
+          <div className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500">
+            NEON
+          </div>
+        </div>
+      )
+    case 'minimal':
+      return (
+        <div className="w-full h-full flex items-center justify-center">
+          <div className="w-24 h-24 border-2 border-black rounded-full" />
+        </div>
+      )
+    case 'abstract':
+      return (
+        <div className="w-full h-full relative overflow-hidden p-6">
+          <div className="absolute top-6 left-6 w-16 h-16 border-4 border-purple-400 rounded-full" />
+          <div className="absolute bottom-6 right-6 w-20 h-20 bg-purple-200" />
+          <div className="absolute top-1/2 left-1/2 w-12 h-24 bg-purple-300 -rotate-45" />
+        </div>
+      )
+    case 'editorial':
+      return (
+        <div className="w-full h-full flex flex-col items-center justify-center gap-4 p-8">
+          <div className="text-6xl font-serif font-light tracking-widest">A</div>
+          <div className="w-32 h-0.5 bg-black" />
+          <div className="text-xs tracking-[0.3em] uppercase">Editorial</div>
+        </div>
+      )
+    case 'branding':
+      return (
+        <div className="w-full h-full flex items-center justify-center">
+          <div className="text-3xl font-black tracking-tighter">BRAND</div>
+        </div>
+      )
+    default:
+      return <div className="w-full h-full bg-gray-200" />
+  }
+}
+
+// Draggable Portfolio Card
+function DraggableCard({ item }: { item: typeof portfolioItems[0] }) {
   const x = useMotionValue(0)
   const y = useMotionValue(0)
   const [isDragging, setIsDragging] = useState(false)
@@ -63,22 +159,17 @@ function DraggableImage({ item }: { item: typeof portfolioItems[0] }) {
         rotate: item.rotate,
         zIndex: isDragging ? 1000 : item.z,
         cursor: 'grab',
+        backgroundColor: item.bg,
       }}
-      whileDrag={{ cursor: 'grabbing', scale: 1.05 }}
-      whileHover={{ scale: 1.02 }}
+      whileDrag={{ cursor: 'grabbing', scale: 1.02, boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' }}
+      whileHover={{ scale: 1.01 }}
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-100px' }}
-      transition={{ duration: 0.5 }}
-      className="select-none"
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ duration: 0.6 }}
+      className="select-none rounded-xl overflow-hidden shadow-lg"
     >
-      <img
-        src={item.src}
-        alt=""
-        className="w-full h-full object-cover rounded-xl shadow-lg"
-        draggable={false}
-        style={{ borderRadius: 11 }}
-      />
+      <TypographyArt type={item.content} />
     </motion.div>
   )
 }
@@ -92,51 +183,54 @@ function Sidebar() {
       initial={{ x: -100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="fixed left-0 top-0 h-screen w-[280px] bg-white z-50 flex flex-col items-center py-10 px-6"
+      className="fixed left-0 top-0 h-screen w-[320px] bg-white z-50 flex flex-col items-center py-12 px-8"
     >
-      {/* Logo */}
-      <motion.a
-        href="/"
-        className="mb-8"
+      {/* Name / Logo */}
+      <div className="mb-6 text-center">
+        <h1 className="text-[42px] font-black leading-none tracking-tight">
+          ANNA<br />MILLS
+        </h1>
+      </div>
+
+      {/* Glitch/Pixel Text */}
+      <div className="mb-8 text-center">
+        <div className="text-[11px] font-mono tracking-widest text-black/70" style={{
+          fontFamily: 'monospace',
+          letterSpacing: '0.2em',
+        }}>
+          ▓▓ ▓▓▓▓ ▓▓▓ ▓▓▓ ▓▓<br />
+          ▓ ▓▓▓▓▓▓▓<br />
+          ▓▓ ▓▓▓ ▓▓▓ ▓▓▓<br />
+          ▓▓▓ ▓▓▓▓▓▓ ▓
+        </div>
+      </div>
+
+      {/* Vintage Photo */}
+      <motion.div
+        className="w-36 h-44 mb-8 overflow-hidden"
         whileHover={{ scale: 1.05 }}
       >
         <img
-          src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200"
-          alt="Anna Mills"
-          className="w-32 h-20 object-cover rounded-lg"
+          src="https://images.unsplash.com/photo-1518756131217-31eb79b20e8f?w=300&h=400&fit=crop&q=80"
+          alt="Vintage portrait"
+          className="w-full h-full object-cover grayscale"
+          style={{ filter: 'grayscale(100%) contrast(1.1)' }}
         />
-      </motion.a>
-
-      {/* Animated Canvas Placeholder */}
-      <motion.div
-        className="w-32 h-32 rounded-xl bg-gradient-to-br from-pink-100 to-purple-100 mb-6 overflow-hidden"
-        animate={{
-          backgroundPosition: ['0% 0%', '100% 100%', '0% 0%'],
-        }}
-        transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
-      >
-        <motion.div
-          className="w-full h-full flex items-center justify-center"
-          animate={{ rotate: [0, 360] }}
-          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-        >
-          <div className="w-16 h-16 rounded-full bg-gradient-to-r from-pink-300 to-purple-300 opacity-50" />
-        </motion.div>
       </motion.div>
 
-      {/* Navigation */}
-      <nav className="flex flex-col items-center gap-2 mb-6">
-        {['ABOUT', 'WORK', 'CONTACT', 'PLAY!'].map((item) => (
+      {/* Navigation - Horizontal */}
+      <nav className="flex items-center gap-6 mb-6">
+        {['ABOUT', 'WORK', 'CONTACT'].map((item) => (
           <motion.a
             key={item}
-            href={`#${item.toLowerCase().replace('!', '')}`}
-            onClick={() => setActiveSection(item.toLowerCase().replace('!', ''))}
-            className={`text-[9px] font-medium tracking-wider transition-colors ${
-              activeSection === item.toLowerCase().replace('!', '')
+            href={`#${item.toLowerCase()}`}
+            onClick={() => setActiveSection(item.toLowerCase())}
+            className={`text-[11px] font-medium tracking-wider transition-colors ${
+              activeSection === item.toLowerCase()
                 ? 'text-black'
-                : 'text-black/60 hover:text-black'
+                : 'text-black/50 hover:text-black'
             }`}
-            whileHover={{ scale: 1.1 }}
+            whileHover={{ y: -2 }}
             whileTap={{ scale: 0.95 }}
           >
             {item}
@@ -145,9 +239,19 @@ function Sidebar() {
       </nav>
 
       {/* Welcome Text */}
-      <p className="text-[9px] text-black/80 text-center leading-relaxed max-w-[168px]">
+      <p className="text-[11px] text-black/70 text-center leading-relaxed max-w-[200px] mb-8">
         Welcome to my website! Do stick around. Scrolling is encouraged here, it makes things happen.
       </p>
+
+      {/* Play Link */}
+      <motion.a
+        href="#play"
+        className="text-[11px] font-medium tracking-wider text-black hover:text-black/60 transition-colors"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        PLAY!
+      </motion.a>
     </motion.aside>
   )
 }
@@ -179,9 +283,9 @@ function BackToTop() {
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
       onClick={scrollToTop}
-      className="fixed bottom-8 right-8 w-12 h-12 bg-black/10 hover:bg-black/20 rounded-full flex items-center justify-center z-50 transition-colors"
+      className="fixed bottom-8 right-8 w-10 h-10 bg-black/5 hover:bg-black/10 rounded-full flex items-center justify-center z-50 transition-colors"
     >
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <path d="M18 15l-6-6-6 6" />
       </svg>
     </motion.button>
@@ -206,27 +310,20 @@ function App() {
       {/* Main Content Area */}
       <main
         ref={containerRef}
-        className="ml-[280px] relative"
+        className="ml-[320px] relative"
         style={{ height: contentHeight }}
       >
         {/* Progress Bar */}
         <motion.div
-          className="fixed top-0 left-[280px] right-0 h-1 bg-black/10 z-40"
-          style={{ scaleX: smoothProgress, transformOrigin: '0%' }}
+          className="fixed top-0 left-[320px] right-0 h-0.5 bg-black/20 z-40 origin-left"
+          style={{ scaleX: smoothProgress }}
         />
 
         {/* Portfolio Items */}
         <div className="relative" style={{ width: '100%', height: contentHeight }}>
           {portfolioItems.map((item) => (
-            <DraggableImage key={item.id} item={item} />
+            <DraggableCard key={item.id} item={item} />
           ))}
-        </div>
-
-        {/* Footer */}
-        <div className="absolute bottom-0 left-0 right-0 py-10 text-center">
-          <p className="text-[9px] text-black/50">
-            © 2025 Anna Mills. All rights reserved.
-          </p>
         </div>
       </main>
 
