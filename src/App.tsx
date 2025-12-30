@@ -104,7 +104,7 @@ function Sidebar() {
       {/* Name / Logo */}
       <div className="text-center">
         <h1 className="text-[42px] font-black leading-none tracking-tight">
-          ANNA<br />MILLS
+          EZIO<br />PAPPALARDO
         </h1>
       </div>
 
@@ -301,7 +301,7 @@ function App() {
           }}
         >
           <p style={{ fontSize: '11px', color: 'rgba(0,0,0,0.4)' }}>
-            © 2025 Anna Mills. All rights reserved.
+            © 2025 Ezio Pappalardo. All rights reserved.
           </p>
         </footer>
       </main>
